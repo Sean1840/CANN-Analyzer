@@ -14,6 +14,12 @@ Load `cann-log-triage` if there is no evidence pack yet. Load `cann-log-locate` 
 
 User-facing split is **上报组件 / 采集 / 解析** (plus 不支持, plus 业务/环境). Name the owner of the current error. Never phrase ownership as “don’t look at X”. If the fault is not msprof, still push localization on the owning repo (path construction, missing files, next commands). Routing: [owners.md](references/owners.md), [owners.json](../../../catalogs/owners.json).
 
+Dump trees (do not mix):
+
+- **ascend_pt 内的数据及其处理流程**（`FRAMEWORK/`、`logs/*Parser.log`、`ASCEND_PROFILER_OUTPUT/`、parser 编排）→ `Ascend/pytorch` `torch_npu/profiler/`
+- **PROF 内部数据解析**（`PROF_*/mindstudio_profiler_log`、`msprof --export/--analyze`、dic/sqlite/csv）→ `ascend/msprof` `analysis/`
+- **数据采集落盘**（`host_start`、`*.slice`、`*.done`、`all_file.complete`、驱动通道）→ `cann/runtime` `src/dfx/msprof`
+
 ## What to analyze
 
 Follow [log-priority.md](../cann-log-triage/references/log-priority.md). Users often ignore WARNING; many profiler warnings are normal empty probes.
@@ -30,8 +36,8 @@ Use this exclusive order. Details: [split-tree.md](references/split-tree.md).
 
 1. **业务/环境** — GE/Runtime/业务在 PROF 出现前就 ERROR（安装包缺失、图初始化失败等）。找 ModuleName 对应仓，继续把路径、缺文件、配置追到可验证的下一步。
 2. **上报组件** — 采集器在跑，但某模块没 `MsprofReport*`/`MsprofRegTypeInfo`，或上报时 buffer 未 init。RUNTIME→`cann/runtime` profiling_agent；GE/FE→`cann/ge`；HCCL→`cann/hccl`；APP/AscendProfiler→`Ascend/pytorch`。
-3. **采集** — 上报有了或采集已 start，但 PROF 缺 `host_start`/`*.done`、磁盘拦截、device dump 条数明显少于 host。找 `cann/runtime` `src/dfx/msprof/collector`（包侧 `cann/oam-tools`）。
-4. **解析** — dump 已完整。失败在 `msprof --export/--analyze` 或 `mindstudio_profiler_log` → `ascend/msprof` `analysis/`。失败在 `ascend_pt/logs/*Parser.log` 的 FWK/关联/TraceView（`ProfilingParser`、`FwkFileParser`、`RelationParser`、`TraceViewParser`）→ `Ascend/pytorch` `torch_npu/profiler/analysis/`。`CANNExportParser` 只是对 PROF 调 `msprof --export=on`：子进程失败跟 msprof；`msprof` 不在 PATH / toolkit 未 source 是环境。
+3. **采集** — 上报有了或采集已 start，但 PROF 缺 `host_start`/`*.done`、磁盘拦截、device dump 条数明显少于 host。找 `cann/runtime` `src/dfx/msprof`（包侧 `cann/oam-tools`）。
+4. **解析** — dump 已完整。PROF 树内（`mindstudio_profiler_log`、export/analyze）→ `ascend/msprof` `analysis/`。ascend_pt 树内（FWK、parser 编排、关联、TraceView、`ASCEND_PROFILER_OUTPUT`）→ `Ascend/pytorch` `torch_npu/profiler/`。需要 PROF 产物时再进 msprof，不要把 PTA 流程当成 msprof 业务。
 5. **不支持** — 文档或日志写明该路径不采。标明能力边界，并给出文档/开关核对步骤。
 
 If none fit: `unknown`. Do not guess an owner.

@@ -11,17 +11,17 @@
       "label": "采集",
       "meaning": "上报已发生或采集已启动，但 PROF dump 缺失、不完整、init 失败、磁盘/device 落盘失败",
       "repo": "cann/runtime",
-      "path": "src/dfx/msprof/collector",
+      "path": "src/dfx/msprof",
       "also": ["cann/oam-tools src/msprof"],
-      "ask": "Runtime 维测采集 / msprof collector"
+      "ask": "Runtime profiling 采集落盘"
     },
     "parse": {
       "label": "解析",
-      "meaning": "PROF 已有 host_start/end_info/*.done/all_file.complete，失败出在 Parser/export/analyze/Insight，或 ascend_pt 的 FWK/关联解析",
+      "meaning": "落盘已完整。PROF 树内解析归 msprof；ascend_pt 内数据与处理流程归 torch_npu profiler",
       "repo": "ascend/msprof",
       "path": "analysis/",
-      "also": ["ascend/msprof-analyze", "ascend/msinsight", "Ascend/pytorch torch_npu/profiler/analysis"],
-      "ask": "inner PROF export/analyze → msprof analysis；FRAMEWORK/TraceView/Relation → torch_npu profiler analysis"
+      "also": ["ascend/msprof-analyze", "ascend/msinsight", "Ascend/pytorch torch_npu/profiler"],
+      "ask": "PROF 内部解析 → msprof analysis；ascend_pt 流程 → torch_npu/profiler"
     },
     "unsupported": {
       "label": "不支持",
@@ -37,13 +37,13 @@
   "modules": {
     "RUNTIME": {"repo": "cann/runtime", "path": "src/runtime", "ask": "Runtime 上报/profiler（profiling_agent / ReportProfApi）"},
     "ASCENDCL": {"repo": "cann/runtime", "path": "src/acl", "ask": "ACL"},
-    "PROFILING": {"repo": "cann/runtime", "path": "src/dfx/msprof/collector", "ask": "msprof 采集"},
+    "PROFILING": {"repo": "cann/runtime", "path": "src/dfx/msprof", "ask": "Runtime profiling 采集落盘"},
     "GE": {"repo": "cann/ge", "path": "", "ask": "GE"},
     "FE": {"repo": "cann/ge", "path": "", "ask": "FE/图融合（GE 仓或 compiler/OPP 包）"},
     "HCCL": {"repo": "cann/hccl", "path": "", "ask": "HCCL"},
     "HIXL": {"repo": "cann/hixl", "path": "", "ask": "HIXL"},
     "DRV": {"repo": "cann/driver", "path": "", "ask": "Driver"},
-    "APP": {"repo": "Ascend/pytorch", "path": "", "ask": "torch_npu / PTA"},
+    "APP": {"repo": "Ascend/pytorch", "path": "torch_npu/profiler", "ask": "torch_npu profiler / ascend_pt 处理流程"},
     "TEFUSION": {"repo": "cann/ge", "path": "", "ask": "TE Fusion"},
     "OP": {"repo": "cann/ops-nn", "path": "", "ask": "算子库（按实际 ops-* 仓）"},
     "TBE": {"repo": "cann/ops-nn", "path": "", "ask": "TBE/算子实现"}

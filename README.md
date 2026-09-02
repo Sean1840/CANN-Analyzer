@@ -92,7 +92,7 @@ msprof dump attribution (when you need it):
 
 - Host: each reported type registers typeInfo `level-id-str`. `5000` is runtime, `5500` is HCCL.
 - Device: `rts → drv(PROF_CHANNEL_*) → collector` under runtime `src/dfx/msprof`. Some files (for example netdev_stats) are collector + DCMI, not a driver channel.
-- `ascend_pt` wraps the same inner `PROF_*` plus `FRAMEWORK/` (`torch.op_mark`). typeInfo and driver channels apply only to `PROF_*`. FWK parse lives in `Ascend/pytorch` `torch_npu/profiler/analysis/`. `CANNExportParser` is `msprof --export=on` on that PROF tree.
+- Three trees: **ascend_pt data and its processing** → `Ascend/pytorch` `torch_npu/profiler/`；**PROF parse** → `ascend/msprof` `analysis/`；**collection dump** → `cann/runtime` `src/dfx/msprof`.
 
 ## Eval
 

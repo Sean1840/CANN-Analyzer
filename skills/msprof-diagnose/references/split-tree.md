@@ -21,15 +21,13 @@ Exclusive checks, first match wins.
 - Messages: failed to start profiling, open device, MsprofInit, dump failed, available volume, FileAgeing
 - host 有 N 条 flip/type，device 明显少且对应 `device_*/data` 文件空或过短
 - `collection_host.log` / `collection_device_*.log` show collector abort
-- 找谁：cann/runtime `src/dfx/msprof/collector`
+- 找谁：cann/runtime `src/dfx/msprof`（采集落盘）
 
 ## parse
 
 - `all_file.complete` or slice `.done` present on the inner `PROF_*` tree
-- **ERROR** under `mindstudio_profiler_log/` → `ascend/msprof` `analysis/`
-- **ERROR** under `ascend_pt/logs/*Parser.log`:
-  - `CANNExportParser` / `CANNAnalyzeParser` / `CANNTimelineParser` wrap `msprof --export=on` / `--analyze=on` on that `PROF_*`. Subprocess fail → msprof. `msprof` missing / toolkit env → 业务/环境
-  - `ProfilingParser`, `FwkFileParser`, `TorchOpParser`, `RelationParser`, `TraceViewParser`, `OperatorViewParser`, `CommunicationParser` → `Ascend/pytorch` `torch_npu/profiler/analysis/` (`FRAMEWORK/` has no typeInfo)
+- **PROF 内部解析** — `PROF_*/mindstudio_profiler_log`、`msprof --export/--analyze`、dic/sqlite → `ascend/msprof` `analysis/`
+- **ascend_pt 内的数据及处理流程** — `FRAMEWORK/`、`logs/*Parser.log`（含 `ProfilingParser` / `CANNExportParser` 编排）、Relation、TraceView、`ASCEND_PROFILER_OUTPUT/` → `Ascend/pytorch` `torch_npu/profiler/`。定位从 torch_npu profiler 业务走；走进 PROF 产物后再用上一行
 - schema / version mismatch / `msprof_analysis.so` / dequeue data match failed / empty parser input while raw data exists
 - Failures in `Ascend/msprof-analyze` after dump already exists
 - Visualization-only failures in `Ascend/msinsight` after CSV/JSON/DB exist

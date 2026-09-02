@@ -7,8 +7,8 @@ Read the tables in [owners.json](../../../catalogs/owners.json). This file only 
 ## Order
 
 1. If GE/Runtime/业务 already ERROR before PROF exists → **非 profiling**，按 ModuleName 找业务仓。
-2. Else if dump 不完整 / collector init 失败 → **采集**，找 `cann/runtime` `src/dfx/msprof/collector`。
-3. Else if dump 完整且失败在 Parser/export → **解析**。inner `PROF_*` / `msprof --export` → `ascend/msprof` `analysis/`；`ascend_pt` 的 FWK / Relation / TraceView → `Ascend/pytorch` `torch_npu/profiler/analysis/`。
+2. Else if dump 不完整 / collector init 失败 → **采集**，找 `cann/runtime` `src/dfx/msprof`（落盘）。
+3. Else if dump 完整且失败在解析 → **解析**。PROF 内部 → `ascend/msprof` `analysis/`；ascend_pt 内数据与处理流程 → `Ascend/pytorch` `torch_npu/profiler/`。
 4. Else if dump 在、解析只是缺名字/缺一类数据 → 先问 **上报组件** 有没有 `MsprofRegTypeInfo` / Report*，再问采集有没有把那份 dic 落盘。
 
 ## Phrasing

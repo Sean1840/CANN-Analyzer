@@ -25,10 +25,13 @@ Exclusive checks, first match wins.
 
 ## parse
 
-- `all_file.complete` or slice `.done` present
-- **ERROR** under `logs/*Parser.log` or `mindstudio_profiler_log/` (not the full WARNING scan of optional tables)
-- schema / version mismatch / `msprof_analysis.so` / dequeue match failed / empty parser input while raw data exists
-- Failures in `Ascend/msprof-analyze` (`msprof_analyze/`) after dump already exists
+- `all_file.complete` or slice `.done` present on the inner `PROF_*` tree
+- **ERROR** under `mindstudio_profiler_log/` → `ascend/msprof` `analysis/`
+- **ERROR** under `ascend_pt/logs/*Parser.log`:
+  - `CANNExportParser` / `CANNAnalyzeParser` / `CANNTimelineParser` wrap `msprof --export=on` / `--analyze=on` on that `PROF_*`. Subprocess fail → msprof. `msprof` missing / toolkit env → 业务/环境
+  - `ProfilingParser`, `FwkFileParser`, `TorchOpParser`, `RelationParser`, `TraceViewParser`, `OperatorViewParser`, `CommunicationParser` → `Ascend/pytorch` `torch_npu/profiler/analysis/` (`FRAMEWORK/` has no typeInfo)
+- schema / version mismatch / `msprof_analysis.so` / dequeue data match failed / empty parser input while raw data exists
+- Failures in `Ascend/msprof-analyze` after dump already exists
 - Visualization-only failures in `Ascend/msinsight` after CSV/JSON/DB exist
 - Parser WARNING that a table/db is missing is **not** a parse fault unless the user asked for that data or an ERROR points at it. See [log-priority.md](../../cann-log-triage/references/log-priority.md).
 

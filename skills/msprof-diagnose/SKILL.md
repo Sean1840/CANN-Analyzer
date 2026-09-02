@@ -31,7 +31,7 @@ Use this exclusive order. Details: [split-tree.md](references/split-tree.md).
 1. **业务/环境** — GE/Runtime/业务在 PROF 出现前就 ERROR（安装包缺失、图初始化失败等）。找 ModuleName 对应仓，继续把路径、缺文件、配置追到可验证的下一步。
 2. **上报组件** — 采集器在跑，但某模块没 `MsprofReport*`/`MsprofRegTypeInfo`，或上报时 buffer 未 init。RUNTIME→`cann/runtime` profiling_agent；GE/FE→`cann/ge`；HCCL→`cann/hccl`；APP/AscendProfiler→`Ascend/pytorch`。
 3. **采集** — 上报有了或采集已 start，但 PROF 缺 `host_start`/`*.done`、磁盘拦截、device dump 条数明显少于 host。找 `cann/runtime` `src/dfx/msprof/collector`（包侧 `cann/oam-tools`）。
-4. **解析** — dump 已完整（`all_file.complete`/`*.done`），失败只在 Parser/export/analyze/Insight。找 `ascend/msprof` `analysis/`（二次分析 `msprof-analyze`，可视化 `msinsight`）。
+4. **解析** — dump 已完整。失败在 `msprof --export/--analyze` 或 `mindstudio_profiler_log` → `ascend/msprof` `analysis/`。失败在 `ascend_pt/logs/*Parser.log` 的 FWK/关联/TraceView（`ProfilingParser`、`FwkFileParser`、`RelationParser`、`TraceViewParser`）→ `Ascend/pytorch` `torch_npu/profiler/analysis/`。`CANNExportParser` 只是对 PROF 调 `msprof --export=on`：子进程失败跟 msprof；`msprof` 不在 PATH / toolkit 未 source 是环境。
 5. **不支持** — 文档或日志写明该路径不采。标明能力边界，并给出文档/开关核对步骤。
 
 If none fit: `unknown`. Do not guess an owner.

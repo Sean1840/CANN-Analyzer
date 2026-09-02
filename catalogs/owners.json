@@ -17,11 +17,11 @@
     },
     "parse": {
       "label": "解析",
-      "meaning": "PROF 已有 host_start/end_info/*.done/all_file.complete，失败出在 Parser/export/analyze/Insight",
+      "meaning": "PROF 已有 host_start/end_info/*.done/all_file.complete，失败出在 Parser/export/analyze/Insight，或 ascend_pt 的 FWK/关联解析",
       "repo": "ascend/msprof",
       "path": "analysis/",
-      "also": ["ascend/msprof-analyze", "ascend/msinsight"],
-      "ask": "msprof 解析（analysis）"
+      "also": ["ascend/msprof-analyze", "ascend/msinsight", "Ascend/pytorch torch_npu/profiler/analysis"],
+      "ask": "inner PROF export/analyze → msprof analysis；FRAMEWORK/TraceView/Relation → torch_npu profiler analysis"
     },
     "unsupported": {
       "label": "不支持",

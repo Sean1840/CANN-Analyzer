@@ -93,6 +93,7 @@ msprof dump attribution (when you need it):
 - Host: each reported type registers typeInfo `level-id-str`. `5000` is runtime, `5500` is HCCL.
 - Device: `rts → drv(PROF_CHANNEL_*) → collector` under runtime `src/dfx/msprof`. Some files (for example netdev_stats) are collector + DCMI, not a driver channel.
 - Three trees: **ascend_pt data and its processing** → `Ascend/pytorch` `torch_npu/profiler/`；**PROF parse** → `ascend/msprof` `analysis/`；**collection dump** → `cann/runtime` `src/dfx/msprof`.
+- No intermediate sqlite: rebuild with Python export to see if it reproduces; if not, compare Python vs C++ export. Else use `msprof.json` / `trace_view.json` / `msprof.db`. Ask the user before cloning for parse-code walkthroughs.
 
 ## Eval
 

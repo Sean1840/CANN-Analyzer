@@ -32,6 +32,7 @@ Exclusive checks, first match wins.
 - Failures in `Ascend/msprof-analyze` after dump already exists
 - Visualization-only failures in `Ascend/msinsight` after CSV/JSON/DB exist
 - Parser WARNING that a table/db is missing is **not** a parse fault unless the user asked for that data or an ERROR points at it. See [log-priority.md](../../cann-log-triage/references/log-priority.md).
+- Intermediate sqlite missing: [parse-without-db.md](parse-without-db.md). Ask before cloning the parse repo.
 
 ## unsupported
 

@@ -37,7 +37,7 @@ Use this exclusive order. Details: [split-tree.md](references/split-tree.md).
 1. **业务/环境** — GE/Runtime/业务在 PROF 出现前就 ERROR（安装包缺失、图初始化失败等）。找 ModuleName 对应仓，继续把路径、缺文件、配置追到可验证的下一步。
 2. **上报组件** — 采集器在跑，但某模块没 `MsprofReport*`/`MsprofRegTypeInfo`，或上报时 buffer 未 init。RUNTIME→`cann/runtime` profiling_agent；GE/FE→`cann/ge`；HCCL→`cann/hccl`；APP/AscendProfiler→`Ascend/pytorch`。
 3. **采集** — 上报有了或采集已 start，但 PROF 缺 `host_start`/`*.done`、磁盘拦截、device dump 条数明显少于 host。找 `cann/runtime` `src/dfx/msprof`（包侧 `cann/oam-tools`）。
-4. **解析** — dump 已完整。PROF 树内（`mindstudio_profiler_log`、export/analyze）→ `ascend/msprof` `analysis/`。ascend_pt 树内（FWK、parser 编排、关联、TraceView、`ASCEND_PROFILER_OUTPUT`）→ `Ascend/pytorch` `torch_npu/profiler/`。需要 PROF 产物时再进 msprof，不要把 PTA 流程当成 msprof 业务。
+4. **解析** — dump 已完整。PROF 树内（`mindstudio_profiler_log`、export/analyze）→ `ascend/msprof` `analysis/`。ascend_pt 树内（FWK、parser 编排、关联、TraceView、`ASCEND_PROFILER_OUTPUT`）→ `Ascend/pytorch` `torch_npu/profiler/`。需要 PROF 产物时再进 msprof，不要把 PTA 流程当成 msprof 业务。中间 sqlite 没有时见 [parse-without-db.md](references/parse-without-db.md)：先用 Python 临时导出复现；复现不了再比 Python/C 导出路径；或用 `msprof.json` / `trace_view.json` / `msprof.db` 迂回。解析对代码前先向用户申请拉仓。
 5. **不支持** — 文档或日志写明该路径不采。标明能力边界，并给出文档/开关核对步骤。
 
 If none fit: `unknown`. Do not guess an owner.
@@ -58,4 +58,4 @@ next: （现场可执行的核对，继续往下定位）
 
 Copy `basis.disclaimer` from the evidence pack or locate output. If `refresh_needed`, tell the user the index may not match their CANN build and ask for version/tag before treating the conclusion as final. If the clone is newer than the dump, say so; still conclude from dump artifacts, not from a post-dump PR.
 
-When the owning repo is identified, do not stop at log matching. Use an existing clone or ask to `index --bootstrap --repo <id>`, then read the source. A non-msprof fault still needs this code-level push.
+When the owning repo is identified, do not stop at log matching. For parse-logic localization, **ask the user first** to provide a clone or run `index --bootstrap --repo <id>`, then read the source. Locate never clones. A non-msprof fault still needs this code-level push.

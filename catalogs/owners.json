@@ -1,0 +1,51 @@
+{
+  "schema": "cann-analyze.owners.v1",
+  "notes": "Who owns the current error after a stage split. State the responsible repo only.",
+  "stages": {
+    "report": {
+      "label": "上报组件",
+      "meaning": "业务或 Runtime/GE/HCCL/torch_npu 已在跑，但没把 profiling 数据/类型名按约定报给采集器",
+      "default_owner": "看 slog 的 ModuleName，按下表 modules 路由"
+    },
+    "collect": {
+      "label": "采集",
+      "meaning": "上报已发生或采集已启动，但 PROF dump 缺失、不完整、init 失败、磁盘/device 落盘失败",
+      "repo": "cann/runtime",
+      "path": "src/dfx/msprof/collector",
+      "also": ["cann/oam-tools src/msprof"],
+      "ask": "Runtime 维测采集 / msprof collector"
+    },
+    "parse": {
+      "label": "解析",
+      "meaning": "PROF 已有 host_start/end_info/*.done/all_file.complete，失败出在 Parser/export/analyze/Insight",
+      "repo": "ascend/msprof",
+      "path": "analysis/",
+      "also": ["ascend/msprof-analyze", "ascend/msinsight"],
+      "ask": "msprof 解析（analysis）"
+    },
+    "unsupported": {
+      "label": "不支持",
+      "meaning": "该 API/图模式/芯片没有 profiling 插桩或官方标明不支持",
+      "ask": "产品文档和对应上报仓的 Prof 开关；给出可核对的开关/文档项"
+    },
+    "component": {
+      "label": "业务/环境",
+      "meaning": "业务或 GE/Runtime 在 profiler 之前就失败，或安装包缺失",
+      "ask": "按 ModuleName 找业务仓，并把缺文件/路径/配置追到可验证的下一步"
+    }
+  },
+  "modules": {
+    "RUNTIME": {"repo": "cann/runtime", "path": "src/runtime", "ask": "Runtime 上报/profiler（profiling_agent / ReportProfApi）"},
+    "ASCENDCL": {"repo": "cann/runtime", "path": "src/acl", "ask": "ACL"},
+    "PROFILING": {"repo": "cann/runtime", "path": "src/dfx/msprof/collector", "ask": "msprof 采集"},
+    "GE": {"repo": "cann/ge", "path": "", "ask": "GE"},
+    "FE": {"repo": "cann/ge", "path": "", "ask": "FE/图融合（GE 仓或 compiler/OPP 包）"},
+    "HCCL": {"repo": "cann/hccl", "path": "", "ask": "HCCL"},
+    "HIXL": {"repo": "cann/hixl", "path": "", "ask": "HIXL"},
+    "DRV": {"repo": "cann/driver", "path": "", "ask": "Driver"},
+    "APP": {"repo": "Ascend/pytorch", "path": "", "ask": "torch_npu / PTA"},
+    "TEFUSION": {"repo": "cann/ge", "path": "", "ask": "TE Fusion"},
+    "OP": {"repo": "cann/ops-nn", "path": "", "ask": "算子库（按实际 ops-* 仓）"},
+    "TBE": {"repo": "cann/ops-nn", "path": "", "ask": "TBE/算子实现"}
+  }
+}

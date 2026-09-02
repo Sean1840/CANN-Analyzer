@@ -1,0 +1,10 @@
+{
+  "schema": "cann-analyze.loggers.v1",
+  "notes": "Python/C++ logger or class names that appear in [Name:line] but are not source basenames.",
+  "names": {
+    "AscendProfiler_ProfilingParser": ["Ascend/pytorch"],
+    "AscendProfiler": ["Ascend/pytorch"],
+    "MSVP": ["ascend/msprof"],
+    "ProfManager": ["ascend/msprof", "cann/runtime"]
+  }
+}

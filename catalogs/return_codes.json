@@ -1,0 +1,19 @@
+{
+  "schema": "cann-analyze.return-codes.v1",
+  "notes": "Numeric ret/dev codes that appear in slog. Keep enums here so locate can decode without reading headers.",
+  "enums": {
+    "MsprofErrorCode": {
+      "0": "MSPROF_ERROR_NONE",
+      "1": "MSPROF_ERROR_MEM_NOT_ENOUGH",
+      "2": "MSPROF_ERROR_GET_ENV",
+      "3": "MSPROF_ERROR_CONFIG_INVALID",
+      "4": "MSPROF_ERROR_ACL_JSON_OFF",
+      "5": "MSPROF_ERROR",
+      "6": "MSPROF_ERROR_UNINITIALIZE"
+    }
+  },
+  "message_fields": {
+    "ret": "MsprofErrorCode",
+    "retCode": "MsprofErrorCode"
+  }
+}

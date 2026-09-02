@@ -1,0 +1,48 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# generated indexes and bootstrap clones
+data/indexes/
+data/mirrors/
+data/cache/
+*.sqlite
+*.sqlite-journal
+*.db
+
+# installed skill copies (edit skills/ instead)
+.grok/
+
+# secrets and machine-local env
+.env
+.env.*
+*.pem
+*.key
+
+# field dumps / analysis artifacts if dropped in-tree
+*.zip
+PROF_*/
+plog.txt
+evidence.json
+evidence-*.json
+/tmp_*.py
+
+# editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+.DS_Store
+Thumbs.db

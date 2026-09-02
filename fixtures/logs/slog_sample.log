@@ -1,0 +1,4 @@
+[ERROR] ASCENDCL(123,python):2026-09-02-18:11:41.121.000 [src/acl/aclrt_impl/context.cpp:244]create context failed, flags=1
+[INFO] ASCENDCL(123,python):2026-09-02-18:11:41.122.000 [src/acl/aclrt_impl/context.cpp:250]create context success, deviceId=0
+[EVENT] ASCENDCL(123,python):2026-09-02-18:11:41.123.000 [src/acl/aclrt_impl/context.cpp:251]context created on device 0
+[ERROR] RUNTIME(123,python):2026-09-02-18:11:41.200.000 [src/runtime/core/src/memory.cc:88]malloc failed, size=4096

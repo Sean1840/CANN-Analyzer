@@ -1,0 +1,35 @@
+{
+  "schema": "cann-analyze.report-map.v1",
+  "notes": "Which PROF/host-device artifacts are produced by which reporter. Fill with team prior knowledge; the tool must not invent mappings.",
+  "incomplete": true,
+  "from_code_so_far": [
+    {
+      "artifact": "aging/unaging.api_event",
+      "reporter": "RUNTIME MsprofReportApi (and other modules using the same API)",
+      "type_id_scheme": "Runtime API types are RT_PROFILE_TYPE_API_BEGIN(1000)+rtProfApiType_t; 1071=1000+71=Memset"
+    },
+    {
+      "artifact": "unaging.additional.type_info_dic",
+      "reporter": "MsprofRegTypeInfo callers (Runtime RegisterProfTypeInfo, plus GE/HCCL/others)",
+      "note": "Parser TypeData::Get fails when an api_event type was reported but not registered into this dic"
+    },
+    {
+      "artifact": "aging.compact.task_track / task_track_v2",
+      "reporter": "RUNTIME task track"
+    },
+    {
+      "artifact": "aging.compact.hccl_op_info / unaging.additional.hccl_info",
+      "reporter": "HCCL (likely), confirm with team"
+    },
+    {
+      "artifact": "device_*/data/*.slice (hbm, nic, roce, pcie, socpmu, ...)",
+      "reporter": "采集器从 device/驱动取样，不是业务 ReportApi"
+    }
+  ],
+  "needed_from_user": [
+    "host 各 unaging/aging 文件前缀对应的上报模块（RUNTIME/GE/HCCL/PTA/mstx）",
+    "device 侧 slice 文件对应的采集通道（collector vs driver vs TS）",
+    "type_id 分段：1000+ Runtime API、其它 level 的归属",
+    "flip 数据是谁上报的（host vs device）"
+  ]
+}

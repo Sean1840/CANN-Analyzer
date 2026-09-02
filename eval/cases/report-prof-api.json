@@ -1,0 +1,15 @@
+{
+  "id": "report-prof-api",
+  "skill": ["cann-log-locate", "msprof-diagnose"],
+  "log": "fixtures/logs/report_prof_api_sample.log",
+  "index_repo": "cann/runtime",
+  "index_source": "fixtures/mini_repo",
+  "expect": {
+    "parsed": {"level": "ERROR", "module": "RUNTIME"},
+    "path_suffix": "profiling_agent.cc",
+    "line_tolerance": 200,
+    "signals": ["collect"],
+    "stage": "collect",
+    "allowed_repos": ["cann/runtime"]
+  }
+}

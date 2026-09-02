@@ -144,7 +144,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--repo", help="catalog repo id, e.g. cann/runtime")
     p.add_argument("--source", help="override local clone path")
     p.add_argument("--commit", help="store this commit label")
-    p.add_argument("--all", action="store_true", help="index every catalog repo that has local_path")
+    p.add_argument("--all", action="store_true", help="index every catalog repo with a path in repos.local.json")
     p.add_argument(
         "--bootstrap",
         action="store_true",

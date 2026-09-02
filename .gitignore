@@ -28,6 +28,7 @@ data/cache/
 .env.*
 *.pem
 *.key
+catalogs/repos.local.json
 
 # field dumps / analysis artifacts if dropped in-tree
 *.zip

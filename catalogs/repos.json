@@ -1,6 +1,6 @@
 {
   "schema": "cann-analyze.repos.v1",
-  "notes": "Adding a new repo is a catalog change, not a code change. Point local_path at an existing clone; never clone during locate.",
+  "notes": "Adding a new repo is a catalog change, not a code change. Clone paths stay in catalogs/repos.local.json (gitignored) or --source. locate never clones.",
   "repos": [
     {
       "id": "cann/runtime",
@@ -13,8 +13,7 @@
       "languages": ["c", "cpp"],
       "index_globs": ["src/**", "include/**", "pkg_inc/**"],
       "skip_globs": ["tests/**", "example/**", "third_party/**", "stub/**"],
-      "msprof_roles": ["component", "collect"],
-      "local_path": "E:/Code/runtime"
+      "msprof_roles": ["component", "collect"]
     },
     {
       "id": "ascend/msprof",
@@ -27,8 +26,7 @@
       "languages": ["python", "cpp"],
       "index_globs": ["analysis/**", "src/**", "misc/**"],
       "skip_globs": ["test/**", "tests/**", "opensource/**", "build/**", "output/**"],
-      "msprof_roles": ["collect", "parse"],
-      "local_path": "E:/Code/msprof"
+      "msprof_roles": ["collect", "parse"]
     },
     {
       "id": "ascend/msprof-analyze",

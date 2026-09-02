@@ -15,10 +15,29 @@ def _load(name: str) -> dict[str, Any]:
         return json.load(fh)
 
 
+def _apply_local_paths(table: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    overlay = catalogs_dir() / "repos.local.json"
+    if not overlay.is_file():
+        return table
+    data = json.loads(overlay.read_text(encoding="utf-8"))
+    mapping = dict(data.get("local_paths") or {})
+    for item in data.get("repos") or []:
+        rid = item.get("id")
+        path = item.get("local_path")
+        if rid and path:
+            mapping[rid] = path
+    out = dict(table)
+    for rid, local in mapping.items():
+        if rid in out:
+            out[rid] = {**out[rid], "local_path": local}
+    return out
+
+
 @lru_cache(maxsize=8)
 def repos() -> dict[str, dict[str, Any]]:
     data = _load("repos.json")
-    return {item["id"]: item for item in data["repos"]}
+    table = {item["id"]: item for item in data["repos"]}
+    return _apply_local_paths(table)
 
 
 @lru_cache(maxsize=8)

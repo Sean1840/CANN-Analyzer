@@ -62,8 +62,8 @@ def index_repo(repo_id: str, source: Path | None = None, commit: str | None = No
     root = Path(source) if source else resolve_local_path(repo)
     if root is None or not root.exists():
         raise FileNotFoundError(
-            f"no local clone for {repo_id}. Set catalogs/repos.json local_path or pass --source. "
-            "locate never clones."
+            f"no local clone for {repo_id}. Pass --source, or set catalogs/repos.local.json "
+            "(see repos.local.json.example). locate never clones."
         )
     git_commit = commit or head_commit(root) or "unknown"
     ref = head_ref(root) or ""

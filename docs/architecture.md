@@ -31,7 +31,7 @@ The index stores **log call sites**, not source trees:
 - format string and fingerprint (printf/numbers/paths collapsed)
 - one source line of context
 
-Query path is local SQLite only. `index` is an offline job against an existing clone (`local_path` in `catalogs/repos.json`). `locate` refuses to git clone.
+Query path is local SQLite only. `index` is an offline job against an existing clone (`--source` or `catalogs/repos.local.json`). `locate` refuses to git clone.
 
 ## Versioning
 

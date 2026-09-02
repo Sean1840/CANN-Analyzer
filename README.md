@@ -38,7 +38,7 @@ scripts\cann-analyze.cmd status
 
 slog already embeds `[File:Line]`. Line numbers still drift across CANN versions, so searching HEAD for an old log is wrong. Index a clone you already have; store `(repo, commit)` call sites. Query is local SQLite only.
 
-Point `local_path` in `catalogs/repos.json` at your clone, or pass `--source`:
+Pass `--source`, or copy `catalogs/repos.local.json.example` to `catalogs/repos.local.json` (gitignored):
 
 ```bat
 python -m cann_analyze catalog
@@ -103,7 +103,7 @@ Rubric: `eval/rubric.md`. The tool must not write `root_cause` / `verdict` / `di
 
 ## Add a repo
 
-1. Add `id` / `url` / `index_globs` / `modules` in `catalogs/repos.json`. Optional `local_path` is machine-local; do not commit a personal disk path if you publish the catalog.
+1. Add `id` / `url` / `index_globs` / `modules` in `catalogs/repos.json`. Clone paths go in `catalogs/repos.local.json`, not in the shared catalog.
 2. Update `catalogs/modules.json` and `log_macros.json` if the slog macros are new.
 3. `python -m cann_analyze index --repo <id> --source <clone>`.
 4. Do not change locate logic for a new repo.
@@ -117,6 +117,6 @@ Already ignored: `data/indexes/`, `data/mirrors/`, `*.sqlite`. Also keep out:
 - Field PROF trees, plog, zip dumps
 - Evidence JSON from real tickets
 - Installed skill copies under `.grok/` (edit `skills/` instead)
-- Tokens and machine-absolute `local_path` values
+- Tokens and `catalogs/repos.local.json`
 
 Design notes: [docs/architecture.md](docs/architecture.md), [docs/index-design.md](docs/index-design.md).

@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from cann_analyze.catalog import return_codes
+from cann_analyze.catalog import cann_error_codes, return_codes
 from cann_analyze.fingerprint import fingerprint, tokens, token_overlap
 from cann_analyze.parsers import parse_file, parse_line, parse_text
 from cann_analyze.stage_signals import candidate_repos, signals_for
@@ -32,19 +32,45 @@ def basename_variants(name: str | None) -> list[str]:
     return [v for v in variants if v]
 
 
+_CANN_CODE = re.compile(r"\b([EWI])([A-Z0-9])(\d{4})\b")
+
+
 def decode_return_codes(text: str | None) -> list[dict[str, str]]:
     if not text:
         return []
     catalog = return_codes()
     enums = catalog.get("enums") or {}
     fields = catalog.get("message_fields") or {}
-    found = []
+    found: list[dict[str, str]] = []
     for match in _RET_FIELD.finditer(text):
         raw = match.group(1)
-        enum_name = fields.get("ret") or "MsprofErrorCode"
-        label = (enums.get(enum_name) or {}).get(raw)
-        if label:
-            found.append({"field": "ret", "value": raw, "name": label, "enum": enum_name})
+        for enum_name, table in enums.items():
+            label = table.get(raw)
+            if label:
+                found.append({"field": "ret", "value": raw, "name": label, "enum": enum_name})
+    cann = cann_error_codes()
+    modules = cann.get("module") or {}
+    levels = cann.get("level") or {}
+    titles = cann.get("codes") or {}
+    seen = {x["value"] for x in found}
+    for match in _CANN_CODE.finditer(text):
+        code = match.group(0)
+        if code in seen:
+            continue
+        seen.add(code)
+        rec = titles.get(code) or {}
+        mod = modules.get(match.group(2)) or {}
+        found.append(
+            {
+                "field": "cann_code",
+                "value": code,
+                "name": str(rec.get("module") or mod.get("name") or "unknown"),
+                "title": str(rec.get("title") or ""),
+                "repo": str(rec.get("repo") if rec.get("repo") is not None else mod.get("repo") or ""),
+                "level": str(rec.get("level") or levels.get(match.group(1)) or match.group(1)),
+                "internal": bool(rec.get("internal")),
+            }
+        )
     return found
 
 
@@ -163,8 +189,9 @@ def analysis_basis(record: dict[str, Any], locations: list[dict[str, Any]], snap
 def format_disclaimer(snapshots: list[dict[str, Any]], reasons: list[str]) -> str:
     if not snapshots:
         return (
-            "分析未命中版本化日志点索引，仅依据日志内嵌 file:line。"
-            "请提供现场 CANN/组件版本或运行 index --bootstrap 后重新分析。"
+            "分析未命中内置基线索引（catalogs/baseline/sites.sqlite），仅依据日志内嵌 file:line。"
+            "先对缺失仓执行 index --repo <id> --source <已有clone> 更新本地 overlay；"
+            "不要为了查行号去 clone。只有需要读实现分析原因/方案时再拉代码。"
         )
     parts = []
     for snap in snapshots:
@@ -239,7 +266,9 @@ def locate_record(record: dict[str, Any], conn=None, limit: int = 5) -> dict[str
                     }
                 )
         candidates.sort(key=lambda x: x["score"], reverse=True)
-        decoded = decode_return_codes(record.get("msg_body") or record.get("msg"))
+        decoded = decode_return_codes(
+            " ".join(str(record.get(k) or "") for k in ("raw", "msg", "msg_body"))
+        )
         embedded = None
         if record.get("file"):
             embedded = {
@@ -249,11 +278,13 @@ def locate_record(record: dict[str, Any], conn=None, limit: int = 5) -> dict[str
                 "repos": repos,
             }
         top = candidates[:limit]
+        parsed_keys = ("level", "module", "file", "line", "tid", "msg", "parser", "error_codes")
         return {
-            "parsed": {k: record.get(k) for k in ("level", "module", "file", "line", "msg", "parser", "error_codes")},
+            "parsed": {k: record.get(k) for k in parsed_keys},
             "embedded": embedded,
             "signals": signals_for(record),
             "return_codes": decoded,
+            "index_miss": not bool(top),
             "basis": analysis_basis(record, top, snaps),
             "locations": top,
         }

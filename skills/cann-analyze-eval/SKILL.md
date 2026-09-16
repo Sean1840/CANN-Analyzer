@@ -8,15 +8,17 @@ description: >
 
 # Evaluate CANN-Analyze
 
-Rubric (single source): [eval/rubric.md](../../eval/rubric.md)
+Rubric (single source): [eval/rubric.md](eval/rubric.md)
 
 ## Run the tool bar
 
-From repo root:
+From the CANN-Analyze repo root (`PYTHONPATH=tools`):
 
 ```text
 python eval/run_eval.py
 ```
+
+npx 安装后从本 skill 目录跑 `python eval/run_eval.py`（需同级 `cann-prof-pipeline/scripts`）。
 
 All committed cases must pass. A skill or extractor change that drops `locate_hit@1` or `no_verdict` is not shippable.
 

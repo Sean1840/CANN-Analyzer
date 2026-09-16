@@ -16,7 +16,7 @@ _UUID = re.compile(r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{
 _WS = re.compile(r"\s+")
 _TOKEN = re.compile(r"[A-Za-z_][A-Za-z0-9_]{2,}")
 _ERROR_CODE = re.compile(
-    r"\b(?:ACL_ERROR_[A-Z0-9_]+|EE\d{4}|EH\d{4}|EL\d{4}|EK\d{4}|RT_[A-Z0-9_]+ERROR)\b"
+    r"\b(?:ACL_ERROR_[A-Z0-9_]+|E[A-Z0-9]\d{4}|W[A-Z0-9]\d{4}|RT_[A-Z0-9_]+ERROR)\b"
 )
 
 
@@ -44,6 +44,17 @@ def fingerprint(text: str) -> str:
 def tokens(text: str) -> list[str]:
     fp = fingerprint(text)
     return [m.group(0) for m in _TOKEN.finditer(fp)][:16]
+
+
+def keywords(*parts: str | None, extra: list[str] | None = None) -> str:
+    bits: list[str] = []
+    for part in parts:
+        if part:
+            bits.extend(tokens(part))
+    for item in extra or []:
+        if item:
+            bits.append(str(item).replace("\\", "/").rsplit("/", 1)[-1].lower())
+    return " ".join(dict.fromkeys(b for b in bits if b))
 
 
 def error_codes(text: str) -> list[str]:

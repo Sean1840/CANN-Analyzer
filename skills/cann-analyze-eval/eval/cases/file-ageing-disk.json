@@ -1,0 +1,15 @@
+{
+  "id": "file-ageing-disk",
+  "skill": ["cann-log-locate", "msprof-diagnose"],
+  "log": "fixtures/logs/file_ageing_sample.log",
+  "index_repo": "cann/runtime",
+  "index_source": "fixtures/mini_repo",
+  "expect": {
+    "parsed": {"level": "ERROR", "module": "PROFILING"},
+    "path_suffix": "file_ageing.cpp",
+    "line_tolerance": 200,
+    "signals": ["collect"],
+    "stage": "collect",
+    "allowed_repos": ["cann/runtime", "ascend/msprof"]
+  }
+}

@@ -1,0 +1,31 @@
+# 总流向（先验）
+
+```text
+业务/框架 (torch_npu)
+    │  host：MsprofReport* / 回调
+    │  NPU：aclprofStart
+    ▼
+runtime 采集  ──写出──►  PROF_*/host/data     （host 组件上报 + host 采样）
+                  └──►  PROF_*/device_x/data （device 硬件经 drv 通道）
+    ▲                         │
+    │                         ▼
+GE / HCCL(hcomm) / ACL        msprof 解析
+ops 一般不走 Report*           host 建树 + device parse
+                              host↔device 按任务 id 关联
+                              export → mindstudio_profiler_output
+                                      │
+torch_npu 再解析 FRAMEWORK + 上述结果 → ASCEND_PROFILER_OUTPUT
+```
+
+分流（原始数据决定采集，解析产物决定解析）：
+
+1. 业务 ERROR 出现在 PROF 还不存在之前 → 业务/环境。
+2. `host/data` 或 `device_*/data` 缺、无 `*.done` / `all_file.complete` → **采集**（runtime）。
+3. 原始在、缺 type 名或某类 host 切片 → **上报**（按模块：ACL/runtime、GE、hcomm）。
+4. 原始完整、缺 `mindstudio_profiler_output` 或关联/导出错 → **解析**（msprof）。
+5. PROF 已解析、缺 `ASCEND_PROFILER_OUTPUT` / `logs` → **框架解析**（pytorch）。
+6. 解析过程发现原始条数/id 对不上 → 回到采集或上报，不要停在 viewer。
+
+Device 硬件：TS/硬件 → device drv 通道 → host drv → 采集 buffer → `device_x/data`。  
+Host 组件：进程内 Report，不经 drv。  
+AICPU：同一套 additional 数据，回 host 可以走 **驱动通道** 或 **host 映射 buffer（采集侧自搬）**，由驱动在 start 时选择。

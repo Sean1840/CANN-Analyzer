@@ -11,7 +11,7 @@ from cann_analyze import __version__
 from cann_analyze.catalog import refresh_community, repos
 from cann_analyze.collect import collect
 from cann_analyze.evidence import build_evidence
-from cann_analyze.index_cmd import bootstrap, index_all, index_repo, status
+from cann_analyze.index_cmd import bootstrap, build_baseline, index_all, index_repo, status
 from cann_analyze.locate import locate_one, locate_path
 from cann_analyze.parsers import parse_file, parse_line
 from cann_analyze.paths import project_root, skills_dir
@@ -54,6 +54,10 @@ def cmd_catalog(args: argparse.Namespace) -> int:
 
 
 def cmd_index(args: argparse.Namespace) -> int:
+    if args.baseline:
+        ids = [args.repo] if args.repo else None
+        _dump(build_baseline(ids), args.output)
+        return 0
     if args.bootstrap:
         ids = [args.repo] if args.repo else None
         _dump(bootstrap(ids), args.output)
@@ -62,7 +66,7 @@ def cmd_index(args: argparse.Namespace) -> int:
         _dump(index_all(only_local=True), args.output)
         return 0
     if not args.repo:
-        print("index requires --repo ID, --all, or --bootstrap", file=sys.stderr)
+        print("index requires --repo ID, --all, --baseline, or --bootstrap", file=sys.stderr)
         return 2
     source = Path(args.source) if args.source else None
     _dump(index_repo(args.repo, source=source, commit=args.commit), args.output)
@@ -119,6 +123,9 @@ def cmd_skills_install(args: argparse.Namespace) -> int:
                 shutil.rmtree(dest)
             shutil.copytree(skill, dest)
             copied.append(str(dest))
+        for shared in src.glob("*.md"):
+            shutil.copy2(shared, dest_root / shared.name)
+            copied.append(str(dest_root / shared.name))
     _dump({"copied": copied}, None)
     return 0
 
@@ -149,6 +156,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--bootstrap",
         action="store_true",
         help="shallow-clone missing catalog repos into data/mirrors and index them; locate still never clones",
+    )
+    p.add_argument(
+        "--baseline",
+        action="store_true",
+        help="rebuild catalogs/baseline/sites.sqlite from local clones (shipped with the repo; no machine paths)",
     )
     p.add_argument("-o", "--output", type=Path)
     p.set_defaults(func=cmd_index)

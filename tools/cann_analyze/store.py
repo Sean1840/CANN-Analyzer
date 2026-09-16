@@ -6,9 +6,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-from cann_analyze.paths import index_path
+from cann_analyze.paths import bundled_index_path, index_path, overlay_index_path
+
+SCHEMA_VERSION = "2"
 
 SCHEMA = """
+CREATE TABLE IF NOT EXISTS meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS snapshots (
     id INTEGER PRIMARY KEY,
     repo_id TEXT NOT NULL,
@@ -35,22 +41,51 @@ CREATE TABLE IF NOT EXISTS sites (
     fingerprint TEXT,
     error_codes TEXT,
     module_hint TEXT,
-    source_line TEXT
+    source_line TEXT,
+    keywords TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_sites_basename ON sites(basename);
 CREATE INDEX IF NOT EXISTS idx_sites_fp ON sites(fingerprint);
 CREATE INDEX IF NOT EXISTS idx_sites_repo ON sites(repo_id, git_commit);
 CREATE INDEX IF NOT EXISTS idx_sites_level ON sites(level);
+CREATE INDEX IF NOT EXISTS idx_sites_keywords ON sites(keywords);
 """
 
 
-def connect(path: Path | None = None) -> sqlite3.Connection:
-    db = path or index_path()
+def connect(path: Path | None = None, *, write: bool = False) -> sqlite3.Connection:
+    db = path or index_path(write=write)
     db.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(db))
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
+    _migrate(conn)
+    conn.execute("INSERT OR REPLACE INTO meta(key, value) VALUES ('schema_version', ?)", (SCHEMA_VERSION,))
     return conn
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(sites)")}
+    if "keywords" not in cols:
+        conn.execute("ALTER TABLE sites ADD COLUMN keywords TEXT")
+        conn.commit()
+
+
+def index_source(conn: sqlite3.Connection) -> str:
+    try:
+        name = Path(conn.execute("PRAGMA database_list").fetchone()[2])
+    except Exception:
+        return "unknown"
+    bundled = bundled_index_path()
+    overlay = overlay_index_path()
+    try:
+        resolved = name.resolve()
+    except OSError:
+        resolved = name
+    if bundled.is_file() and resolved == bundled.resolve():
+        return "bundled"
+    if overlay.is_file() and resolved == overlay.resolve():
+        return "overlay"
+    return "other"
 
 
 def latest_snapshot(conn: sqlite3.Connection, repo_id: str | None = None) -> dict[str, Any] | None:
@@ -115,13 +150,14 @@ def replace_snapshot(
                 json.dumps(site.get("error_codes") or []),
                 site.get("module_hint"),
                 site.get("source_line"),
+                site.get("keywords"),
             )
         )
     conn.executemany(
         """INSERT INTO sites(
             snapshot_id, repo_id, git_commit, path, basename, line, func, macro, level, lang,
-            fmt, fingerprint, error_codes, module_hint, source_line
-        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            fmt, fingerprint, error_codes, module_hint, source_line, keywords
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
         rows,
     )
     conn.execute("UPDATE snapshots SET site_count=? WHERE id=?", (len(rows), snapshot_id))
@@ -173,8 +209,8 @@ def search_sites(
         clauses.append("(fingerprint = ? OR fingerprint LIKE ?)")
         args.extend([fingerprint_value, "%" + fingerprint_value[:40] + "%"])
     for tok in tokens or []:
-        clauses.append("fingerprint LIKE ?")
-        args.append("%" + tok + "%")
+        clauses.append("(fingerprint LIKE ? OR keywords LIKE ? OR fmt LIKE ?)")
+        args.extend(["%" + tok + "%", "%" + tok + "%", "%" + tok + "%"])
     where = " AND ".join(clauses) if clauses else "1=1"
     sql = f"SELECT * FROM sites WHERE {where} LIMIT ?"
     args.append(limit)

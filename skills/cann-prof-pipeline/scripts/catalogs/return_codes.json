@@ -1,0 +1,40 @@
+{
+  "schema": "cann-analyze.return-codes.v1",
+  "notes": "Numeric ret/dev codes that appear in slog. Keep enums here so locate can decode without reading headers.",
+  "enums": {
+    "MsprofErrorCode": {
+      "0": "MSPROF_ERROR_NONE",
+      "1": "MSPROF_ERROR_MEM_NOT_ENOUGH",
+      "2": "MSPROF_ERROR_GET_ENV",
+      "3": "MSPROF_ERROR_CONFIG_INVALID",
+      "4": "MSPROF_ERROR_ACL_JSON_OFF",
+      "5": "MSPROF_ERROR",
+      "6": "MSPROF_ERROR_UNINITIALIZE"
+    },
+    "DrvError": {
+      "0": "DRV_ERROR_NONE",
+      "1": "DRV_ERROR_NO_DEVICE",
+      "2": "DRV_ERROR_INVALID_DEVICE",
+      "3": "DRV_ERROR_INVALID_VALUE",
+      "4": "DRV_ERROR_INVALID_HANDLE",
+      "5": "DRV_ERROR_INVALID_MALLOC_TYPE",
+      "6": "DRV_ERROR_OUT_OF_MEMORY",
+      "7": "DRV_ERROR_INNER_ERR",
+      "8": "DRV_ERROR_PARA_ERROR",
+      "9": "DRV_ERROR_UNINIT",
+      "10": "DRV_ERROR_REPEATED_INIT",
+      "11": "DRV_ERROR_NOT_EXIST",
+      "12": "DRV_ERROR_REPEATED_USERD",
+      "13": "DRV_ERROR_BUSY",
+      "14": "DRV_ERROR_NO_RESOURCES",
+      "15": "DRV_ERROR_OUT_OF_CMD_SLOT",
+      "16": "DRV_ERROR_WAIT_TIMEOUT",
+      "17": "DRV_ERROR_IOCRL_FAIL"
+    }
+  },
+  "message_fields": {
+    "ret": "MsprofErrorCode",
+    "retCode": "MsprofErrorCode"
+  },
+  "notes_extra": "ret= 数字可能是采集 MsprofErrorCode（0–6）或驱动 DrvError。口头说 drv 时用 DrvError。来源 driver pkg_inc/ascend_hal_error.h，可能随包变。"
+}

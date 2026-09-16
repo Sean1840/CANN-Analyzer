@@ -9,8 +9,8 @@ from typing import Any
 from cann_analyze.catalog import repo_by_id, repos, resolve_local_path
 from cann_analyze.extract import C_EXTS, PY_EXTS, SKIP_DIRS, extract_file, should_skip
 from cann_analyze.gitutil import clone_or_update, head_commit, head_ref
-from cann_analyze.paths import mirrors_dir
-from cann_analyze.store import connect, list_snapshots, replace_snapshot
+from cann_analyze.paths import bundled_index_path, index_path, mirrors_dir
+from cann_analyze.store import connect, index_source, list_snapshots, replace_snapshot
 
 
 def _match_any(rel: str, globs: list[str]) -> bool:
@@ -57,13 +57,29 @@ def iter_source_files(root: Path, repo: dict[str, Any]) -> list[Path]:
     return files
 
 
-def index_repo(repo_id: str, source: Path | None = None, commit: str | None = None) -> dict[str, Any]:
+def resolve_source(repo: dict[str, Any]) -> Path | None:
+    local = resolve_local_path(repo)
+    if local is not None:
+        return local
+    dest = mirror_path(repo)
+    return dest if dest.exists() else None
+
+
+def index_repo(
+    repo_id: str,
+    source: Path | None = None,
+    commit: str | None = None,
+    *,
+    db_path: Path | None = None,
+    store_source: bool = True,
+) -> dict[str, Any]:
     repo = repo_by_id(repo_id)
-    root = Path(source) if source else resolve_local_path(repo)
+    root = Path(source) if source else resolve_source(repo)
     if root is None or not root.exists():
         raise FileNotFoundError(
-            f"no local clone for {repo_id}. Pass --source, or set catalogs/repos.local.json "
-            "(see repos.local.json.example). locate never clones."
+            f"no local clone for {repo_id}. Ask the user for the path, then pass --source "
+            "or set cann.repo_paths in ~/.agent-skills/config.json "
+            "(or catalogs/repos.local.json). locate never clones."
         )
     git_commit = commit or head_commit(root) or "unknown"
     ref = head_ref(root) or ""
@@ -72,9 +88,10 @@ def index_repo(repo_id: str, source: Path | None = None, commit: str | None = No
     t0 = time.time()
     for path in files:
         sites.extend(extract_file(path, root))
-    conn = connect()
+    conn = connect(db_path, write=True) if db_path else connect(write=True)
     try:
-        count = replace_snapshot(conn, repo_id, git_commit, ref, str(root), sites)
+        stored = str(root) if store_source else ""
+        count = replace_snapshot(conn, repo_id, git_commit, ref, stored, sites)
     finally:
         conn.close()
     return {
@@ -91,11 +108,51 @@ def index_repo(repo_id: str, source: Path | None = None, commit: str | None = No
 def index_all(only_local: bool = True) -> list[dict[str, Any]]:
     results = []
     for repo_id, repo in repos().items():
-        local = resolve_local_path(repo)
+        local = resolve_source(repo) if not only_local else resolve_local_path(repo)
         if only_local and local is None:
+            continue
+        if local is None:
             continue
         results.append(index_repo(repo_id, local))
     return results
+
+
+def baseline_repo_ids() -> list[str]:
+    return [rid for rid, repo in repos().items() if repo.get("baseline")]
+
+
+def build_baseline(repo_ids: list[str] | None = None) -> dict[str, Any]:
+    """Write catalogs/baseline/sites.sqlite. No machine-local source_path. Locate never clones."""
+    dest = bundled_index_path()
+    if dest.is_file():
+        dest.unlink()
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    selected = repo_ids or baseline_repo_ids()
+    results = []
+    for repo_id in selected:
+        repo = repo_by_id(repo_id)
+        root = resolve_source(repo)
+        if root is None:
+            results.append({"repo_id": repo_id, "error": "no_local_clone"})
+            continue
+        try:
+            results.append(index_repo(repo_id, source=root, db_path=dest, store_source=False))
+        except Exception as exc:
+            results.append({"repo_id": repo_id, "error": str(exc)})
+    conn = connect(dest, write=True)
+    try:
+        conn.commit()
+        conn.isolation_level = None
+        conn.execute("VACUUM")
+        snaps = list_snapshots(conn)
+    finally:
+        conn.close()
+    return {
+        "db": str(dest),
+        "bytes": dest.stat().st_size if dest.is_file() else 0,
+        "snapshots": snaps,
+        "repos": results,
+    }
 
 
 def mirror_path(repo: dict[str, Any]) -> Path:
@@ -135,19 +192,27 @@ def bootstrap(repo_ids: list[str] | None = None) -> list[dict[str, Any]]:
 
 
 def status() -> dict[str, Any]:
+    db = index_path(write=False)
     conn = connect()
     try:
         snaps = list_snapshots(conn)
+        source = index_source(conn)
     finally:
         conn.close()
     local = []
     for repo_id, repo in repos().items():
-        path = resolve_local_path(repo)
+        path = resolve_source(repo)
         local.append(
             {
                 "id": repo_id,
+                "baseline": bool(repo.get("baseline")),
                 "local_path": str(path) if path else None,
                 "indexed": any(s["repo_id"] == repo_id for s in snaps),
             }
         )
-    return {"snapshots": snaps, "repos": local}
+    return {
+        "index_file": str(db) if db.is_file() else None,
+        "index_source": source if db.is_file() else "missing",
+        "snapshots": snaps,
+        "repos": local,
+    }

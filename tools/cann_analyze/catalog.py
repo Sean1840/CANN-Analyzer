@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import runpy
 from functools import lru_cache
 from pathlib import Path
@@ -15,17 +16,30 @@ def _load(name: str) -> dict[str, Any]:
         return json.load(fh)
 
 
+def _home_repo_paths() -> dict[str, str]:
+    env = os.environ.get("AGENT_SKILLS_CONFIG")
+    path = Path(env).expanduser() if env else Path.home() / ".agent-skills" / "config.json"
+    if not path.is_file():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return {str(k): str(v) for k, v in dict((data.get("cann") or {}).get("repo_paths") or {}).items() if k and v}
+
+
 def _apply_local_paths(table: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    mapping: dict[str, str] = {}
     overlay = catalogs_dir() / "repos.local.json"
-    if not overlay.is_file():
-        return table
-    data = json.loads(overlay.read_text(encoding="utf-8"))
-    mapping = dict(data.get("local_paths") or {})
-    for item in data.get("repos") or []:
-        rid = item.get("id")
-        path = item.get("local_path")
-        if rid and path:
-            mapping[rid] = path
+    if overlay.is_file():
+        data = json.loads(overlay.read_text(encoding="utf-8"))
+        mapping.update(dict(data.get("local_paths") or {}))
+        for item in data.get("repos") or []:
+            rid = item.get("id")
+            path = item.get("local_path")
+            if rid and path:
+                mapping[rid] = path
+    mapping.update(_home_repo_paths())
     out = dict(table)
     for rid, local in mapping.items():
         if rid in out:
@@ -63,6 +77,11 @@ def loggers() -> dict[str, list[str]]:
 @lru_cache(maxsize=8)
 def return_codes() -> dict[str, Any]:
     return _load("return_codes.json")
+
+
+@lru_cache(maxsize=8)
+def cann_error_codes() -> dict[str, Any]:
+    return _load("cann_error_codes.json")
 
 
 def repo_by_id(repo_id: str) -> dict[str, Any]:

@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from cann_analyze.pid_bind import bind_pids
+
 LOG_SUFFIXES = {".log", ".txt", ".out", ".err"}
 LOG_NAME_HINTS = (
     "plog-",
@@ -71,6 +73,7 @@ def collect(path: Path) -> dict[str, Any]:
         "file_count": len(entries),
         "kinds": kinds,
         "files": entries,
+        "pid_bind": bind_pids(root),
     }
 
 

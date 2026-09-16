@@ -1,6 +1,6 @@
 {
   "schema": "cann-analyze.repos-local.v1",
-  "notes": "Copy to catalogs/repos.local.json. That file is gitignored. Keys are catalog repo ids.",
+  "notes": "Copy to catalogs/repos.local.json (gitignored), or set cann.repo_paths in ~/.agent-skills/config.json. Ask the user for each path; do not invent drive letters.",
   "local_paths": {
     "cann/runtime": "/path/to/runtime",
     "ascend/msprof": "/path/to/msprof"

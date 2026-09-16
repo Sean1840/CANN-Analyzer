@@ -1,0 +1,95 @@
+{
+  "schema": "cann-analyze.msprof-signals.v1",
+  "notes": "Path and message signals only. The tool never emits a root-cause verdict.",
+  "collect": {
+    "modules": ["PROFILING"],
+    "path_substrings": [
+      "/PROF_",
+      "\\PROF_",
+      "host_start.log",
+      "dev_start.log",
+      "start_info",
+      "end_info",
+      "info.json",
+      "sample.json",
+      "collection_host.log",
+      "collection_device_"
+    ],
+    "message_regex": [
+      "start profiling",
+      "stop profiling",
+      "collection",
+      "collected",
+      "will not be collected",
+      "dump failed",
+      "failed to start",
+      "open device",
+      "aclprof",
+      "MsprofInit",
+      "MsprofFinalize",
+      "report profiling",
+      "ReportProfApi",
+      "file ageing",
+      "file aging",
+      "Ring buffer",
+      "EK0204",
+      "available volume"
+    ]
+  },
+  "parse": {
+    "path_substrings": [
+      "ProfilingParser.log",
+      "CANNExportParser.log",
+      "CANNAnalyzeParser.log",
+      "TraceViewParser.log",
+      "KernelViewParser.log",
+      "OperatorViewParser.log",
+      "MemoryViewParser.log",
+      "CommunicationParser.log",
+      "IntegrateParser.log",
+      "mindstudio_profiler_log",
+      "msprof_analysis_"
+    ],
+    "message_regex": [
+      "Parser start",
+      "Parser finish",
+      "process data finished",
+      "export",
+      "schema",
+      "version mismatch",
+      "Data has been analyzed",
+      "msprof_analysis.so",
+      "dequeue data match failed",
+      "No data preparation data"
+    ]
+  },
+  "unsupported": {
+    "message_regex": [
+      "not support",
+      "unsupported",
+      "not implemented",
+      "feature is not",
+      "does not support",
+      "currently not supported"
+    ]
+  },
+  "component": {
+    "path_substrings": [
+      "/ascend/log/",
+      "\\ascend\\log\\",
+      "plog-",
+      "device-"
+    ],
+    "modules": [
+      "RUNTIME",
+      "ASCENDCL",
+      "GE",
+      "HCCL",
+      "DRV",
+      "AICPU",
+      "OP",
+      "TBE",
+      "TS"
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
 
 
@@ -9,10 +10,10 @@ def project_root() -> Path:
     if env:
         return Path(env).expanduser().resolve()
     here = Path(__file__).resolve()
-    for candidate in (here.parents[2], Path.cwd(), *Path.cwd().parents):
+    for candidate in (here.parent, here.parents[1], here.parents[2], Path.cwd(), *Path.cwd().parents):
         if (candidate / "catalogs" / "repos.json").is_file():
             return candidate
-    return here.parents[2]
+    return here.parents[1]
 
 
 def catalogs_dir() -> Path:
@@ -28,10 +29,29 @@ def data_dir() -> Path:
     return path
 
 
-def index_path() -> Path:
+def bundled_index_path() -> Path:
+    return catalogs_dir() / "baseline" / "sites.sqlite"
+
+
+def overlay_index_path() -> Path:
     path = data_dir() / "indexes"
     path.mkdir(parents=True, exist_ok=True)
     return path / "sites.sqlite"
+
+
+def index_path(*, write: bool = False) -> Path:
+    """Writable overlay in data/indexes; locate falls back to shipped catalogs/baseline."""
+    overlay = overlay_index_path()
+    bundled = bundled_index_path()
+    if write:
+        if not overlay.is_file() and bundled.is_file():
+            shutil.copy2(bundled, overlay)
+        return overlay
+    if overlay.is_file():
+        return overlay
+    if bundled.is_file():
+        return bundled
+    return overlay
 
 
 def skills_dir() -> Path:

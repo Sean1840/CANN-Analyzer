@@ -1,0 +1,15 @@
+{
+  "id": "msprof-parse-warning",
+  "skill": ["msprof-diagnose", "cann-log-locate"],
+  "log": "fixtures/logs/msprof_parse_sample.log",
+  "index_repo": "cann/runtime",
+  "index_source": "fixtures/mini_repo",
+  "expect": {
+    "parsed": {"level": "WARNING"},
+    "path_suffix": "data_preparation_parser.py",
+    "line_tolerance": 50,
+    "signals": ["parse"],
+    "stage": "parse",
+    "allowed_repos": ["ascend/msprof", "cann/runtime"]
+  }
+}

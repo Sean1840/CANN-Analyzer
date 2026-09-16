@@ -19,6 +19,8 @@ data/cache/
 *.sqlite
 *.sqlite-journal
 *.db
+!catalogs/baseline/sites.sqlite
+!skills/cann-prof-pipeline/scripts/catalogs/baseline/sites.sqlite
 
 # installed skill copies (edit skills/ instead)
 .grok/

@@ -8,13 +8,14 @@ from cann_analyze.fingerprint import error_codes, fingerprint, strip_slog_prefix
 
 LEVELS = ("ERROR", "WARNING", "WARN", "INFO", "DEBUG", "EVENT", "CRITICAL", "TRACE")
 
-# [ERROR] TEFUSION(12940,atc):2021-10-17-05:54:07.599.074 [tensor_engine/te_fusion/pywrapper.cc:33]msg
+# plog: [LEVEL] MODULE(pid,prog):时间 [src:line] [tid] message
 SLOG = re.compile(
     r"^\[(?P<level>ERROR|WARNING|WARN|INFO|DEBUG|EVENT|TRACE)\]\s*"
     r"(?P<module>[A-Za-z][A-Za-z0-9_]*)\s*"
     r"\((?P<pid>\d+)\s*,\s*(?P<pname>[^)]*)\)\s*:\s*"
     r"(?P<ts>\d{4}-\d{2}-\d{2}-\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:\.\d+)?)\s*"
     r"(?:\[(?P<file>[^:\]]+):(?P<line>\d+)\]\s*)?"
+    r"(?:\[(?P<tid>(?:tid[:\s]*)?[^\]]+)\]\s*)?"
     r"(?P<msg>.*)$"
 )
 
@@ -73,6 +74,7 @@ def _record(**kwargs: Any) -> dict[str, Any]:
         "level": _norm_level(kwargs.get("level")),
         "module": kwargs.get("module"),
         "pid": kwargs.get("pid"),
+        "tid": kwargs.get("tid"),
         "process": kwargs.get("pname"),
         "ts": kwargs.get("ts"),
         "file": kwargs.get("file"),

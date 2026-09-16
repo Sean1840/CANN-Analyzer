@@ -1,0 +1,11 @@
+{
+  "name": "cann-analyze",
+  "version": "0.1.0",
+  "description": "CANN/msprof profiling skills and log-site locator",
+  "keywords": ["skills", "cann", "msprof", "profiling"],
+  "homepage": "https://github.com/Sean1840/CANN-Analyzer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sean1840/CANN-Analyzer.git"
+  }
+}

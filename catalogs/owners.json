@@ -12,7 +12,7 @@
       "meaning": "上报已发生或采集已启动，但 PROF dump 缺失、不完整、init 失败、磁盘/device 落盘失败",
       "repo": "cann/runtime",
       "path": "src/dfx/msprof",
-      "also": ["cann/oam-tools src/msprof"],
+      "also": [],
       "ask": "Runtime profiling 采集落盘"
     },
     "parse": {
@@ -40,7 +40,7 @@
     "PROFILING": {"repo": "cann/runtime", "path": "src/dfx/msprof", "ask": "Runtime profiling 采集落盘"},
     "GE": {"repo": "cann/ge", "path": "", "ask": "GE"},
     "FE": {"repo": "cann/ge", "path": "", "ask": "FE/图融合（GE 仓或 compiler/OPP 包）"},
-    "HCCL": {"repo": "cann/hccl", "path": "", "ask": "HCCL"},
+    "HCCL": {"repo": "cann/hcomm", "path": "", "ask": "HCCL 上报在 hcomm（ProfilingManagerPub），不是 hccl 仓"},
     "HIXL": {"repo": "cann/hixl", "path": "", "ask": "HIXL"},
     "DRV": {"repo": "cann/driver", "path": "", "ask": "Driver"},
     "APP": {"repo": "Ascend/pytorch", "path": "torch_npu/profiler", "ask": "torch_npu profiler / ascend_pt 处理流程"},

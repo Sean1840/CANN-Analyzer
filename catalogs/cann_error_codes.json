@@ -1,0 +1,2508 @@
+{
+  "schema": "cann-analyze.cann-error-codes.v2",
+  "source": "使用说明-CANN9.2.0-beta.2-昇腾社区.html (saved from error_code_desc.md)",
+  "count": 343,
+  "notes": "先验：屏显/plog 6位错误码。模块字母+标题来自官网页面。解决步骤仍以官网为准；本表用于分流到仓。",
+  "level": {
+    "E": "错误",
+    "W": "告警",
+    "I": "提示"
+  },
+  "module": {
+    "1": {
+      "name": "GE",
+      "repo": "cann/ge"
+    },
+    "2": {
+      "name": "FE",
+      "repo": "cann/ge"
+    },
+    "3": {
+      "name": "AI CPU",
+      "repo": "cann/runtime"
+    },
+    "4": {
+      "name": "TE Fusion",
+      "repo": "cann/ge"
+    },
+    "7": {
+      "name": "Vector算子插件",
+      "repo": "cann/ops-nn"
+    },
+    "8": {
+      "name": "Vector算子",
+      "repo": "cann/ops-nn"
+    },
+    "B": {
+      "name": "TBE Pass",
+      "repo": "cann/ops-nn"
+    },
+    "C": {
+      "name": "Auto Tune",
+      "repo": null
+    },
+    "D": {
+      "name": "RLTune",
+      "repo": null
+    },
+    "E": {
+      "name": "Runtime",
+      "repo": "cann/runtime"
+    },
+    "F": {
+      "name": "LxFusion",
+      "repo": "cann/ge"
+    },
+    "G": {
+      "name": "AOE",
+      "repo": null
+    },
+    "H": {
+      "name": "AscendCL",
+      "repo": "cann/runtime"
+    },
+    "I": {
+      "name": "HCCL",
+      "repo": "cann/hcomm"
+    },
+    "J": {
+      "name": "HCCP",
+      "repo": "cann/hcomm"
+    },
+    "K": {
+      "name": "Profiling",
+      "repo": "cann/runtime"
+    },
+    "L": {
+      "name": "Driver",
+      "repo": "cann/driver"
+    },
+    "M": {
+      "name": "队列调度",
+      "repo": "cann/runtime"
+    },
+    "N": {
+      "name": "DVPP",
+      "repo": "cann/runtime"
+    },
+    "O": {
+      "name": "AMCT",
+      "repo": null
+    },
+    "P": {
+      "name": "unknown",
+      "repo": null
+    },
+    "Z": {
+      "name": "算子公共/aclnn",
+      "repo": "cann/ops-nn"
+    }
+  },
+  "range": {
+    "0000-8999": "用户类",
+    "9000-9999": "内部错误"
+  },
+  "codes": {
+    "E10001": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10002": {
+      "title": "Invalid Argument Tensor Input Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10003": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10004": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10005": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10006": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10007": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10008": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10009": {
+      "title": "Invalid Argument Tensor Dynamic Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10010": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10011": {
+      "title": "Invalid Argument Tensor Input Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10012": {
+      "title": "Invalid Argument Tensor Input Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10013": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10014": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10016": {
+      "title": "Invalid Argument Operator Name",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10017": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10018": {
+      "title": "Invalid Argument Tensor Dynamic Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10019": {
+      "title": "Invalid Argument Tensor Input Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10020": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10021": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10022": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10023": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10024": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10025": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10026": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10027": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10029": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10030": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10031": {
+      "title": "Invalid Argument Tensor Input Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10032": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10034": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10035": {
+      "title": "Invalid Argument Tensor Dynamic Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10036": {
+      "title": "Invalid Argument Tensor Dynamic Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10037": {
+      "title": "Invalid Argument Tensor Dynamic Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10038": {
+      "title": "Invalid Argument Tensor Dynamic Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10039": {
+      "title": "Invalid Argument Tensor Dynamic Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10040": {
+      "title": "Invalid Argument Tensor Input Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10041": {
+      "title": "Invalid Argument Model",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10045": {
+      "title": "Invalid Argument Tensor Dynamic Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10046": {
+      "title": "Invalid Argument Tensor Dynamic Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10047": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10048": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10049": {
+      "title": "Invalid Argument Tensor Input Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10050": {
+      "title": "Invalid Argument Tensor Input Shape Range",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10051": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10052": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10054": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10055": {
+      "title": "Not Supported",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10056": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10057": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10058": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10059": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10060": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10061": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10062": {
+      "title": "Invalid Argument API Call Sequence",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10063": {
+      "title": "Environment Error",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10401": {
+      "title": "Invalid Argument Operator Input Count",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10402": {
+      "title": "Invalid Argument Operator Input Buffer",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10403": {
+      "title": "Invalid Argument Operator Output Count",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10404": {
+      "title": "Invalid Argument Operator Output Buffer",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10405": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10406": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10410": {
+      "title": "File Operation Error File Not Exist",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E10501": {
+      "title": "Not Supported Operator",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11001": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11003": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11004": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11005": {
+      "title": "Invalid Argument Tensor Input Shape",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11008": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11009": {
+      "title": "Not Supported Operator",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11012": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11014": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11015": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11016": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11017": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11018": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11021": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11022": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11023": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11024": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11027": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11029": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11032": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11033": {
+      "title": "Invalid Argument Caffe Model Weight",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11035": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11036": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E11037": {
+      "title": "Invalid Argument Caffe Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E12004": {
+      "title": "Invalid Argument Operator Input Index",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E12009": {
+      "title": "Invalid Argument TensorFlow Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E12013": {
+      "title": "Invalid Argument TensorFlow Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E12029": {
+      "title": "Invalid Argument TensorFlow Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13000": {
+      "title": "File Operation Error Invalid Path",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13001": {
+      "title": "File Operation Error Open",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13002": {
+      "title": "Directory Operation Error Name Too Long",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13003": {
+      "title": "File Operation Error Read",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13004": {
+      "title": "File Operation Error Write",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13005": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13006": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13009": {
+      "title": "Invalid Argument Operator Name",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13010": {
+      "title": "Not Supported Operator",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13014": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13015": {
+      "title": "File Operation Error Invalid File Size",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13018": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13023": {
+      "title": "Invalid Argument OM Model Size",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13024": {
+      "title": "Config Error Invalid Environment Variable",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13025": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13026": {
+      "title": "File Operation Error Invalid Path",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13027": {
+      "title": "Invalid Argument Network Connection",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13028": {
+      "title": "Compilation Error Execute Custom Fusion Pass",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13029": {
+      "title": "Compilation Error Load Custom Fusion Pass",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13030": {
+      "title": "Initialization Error Register Custom Fusion Pass",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E13031": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E14001": {
+      "title": "Invalid Argument Operator Compilation Parameter",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E14002": {
+      "title": "Invalid Argument Tensor Attribute",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E16001": {
+      "title": "Invalid Argument ONNX Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E16002": {
+      "title": "Invalid Argument ONNX Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E16004": {
+      "title": "Invalid Argument ONNX Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E16005": {
+      "title": "Invalid Argument ONNX Model Data",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "W11001": {
+      "title": "Performance Not Optimal Operator",
+      "level": "告警",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "W11002": {
+      "title": "Config Error Weight Configuration",
+      "level": "告警",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "W11003": {
+      "title": "Config Error Operator Missing Implementation",
+      "level": "告警",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E19999": {
+      "title": "Inner Error",
+      "level": "错误",
+      "module": "GE",
+      "repo": "cann/ge",
+      "internal": true
+    },
+    "E20001": {
+      "title": "Compilation Error",
+      "level": "错误",
+      "module": "FE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E20002": {
+      "title": "Config Error Invalid Environment Variable",
+      "level": "错误",
+      "module": "FE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E20003": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "FE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E20007": {
+      "title": "Compilation Error Execute Fusion Pass",
+      "level": "错误",
+      "module": "FE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E20101": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "FE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E20103": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "FE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E21001": {
+      "title": "File Operation Error Open",
+      "level": "错误",
+      "module": "FE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E21002": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "FE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E22001": {
+      "title": "Compilation Error",
+      "level": "错误",
+      "module": "FE",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E30003": {
+      "title": "Not Supported Specification",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "E30004": {
+      "title": "NN Process Bin Error（已废弃）",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "E30005": {
+      "title": "Device Connection Failure（已废弃）",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "E30006": {
+      "title": "Package Error Verify OPP",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "E30007": {
+      "title": "Cgroup Add Failure（已废弃）",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "E30008": {
+      "title": "Execution Error AICPU Operator Timeout",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "E30009": {
+      "title": "Package Error Verify Package",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "E39001": {
+      "title": "Invalid Argument（已废弃）",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E39002": {
+      "title": "Inner Error Driver API Call Failed",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E39004": {
+      "title": "Inner Error AICPU Scheduler Init Failed",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E39005": {
+      "title": "Inner Error TSDaemon Process Abnormal",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E39006": {
+      "title": "Inner Error Failed Send OPP To Device",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E39007": {
+      "title": "Inner Error Device Subprocess Startup Timeout",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E39008": {
+      "title": "Inner Error Verify NN Process Binary",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E39009": {
+      "title": "Inner Error Device Status Abnormal",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E39010": {
+      "title": "Inner Error Cgroup Add Failed",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E39011": {
+      "title": "Inner Error Failed Load Package To Device",
+      "level": "错误",
+      "module": "AI CPU",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "E40001": {
+      "title": "Config Error Invalid Environment Variable",
+      "level": "错误",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E40002": {
+      "title": "Environment Error Incorrect Python Version",
+      "level": "错误",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E40003": {
+      "title": "File Operation Error Open",
+      "level": "错误",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E40020": {
+      "title": "Environment Error Import Python Module Failed",
+      "level": "错误",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E40021": {
+      "title": "Compilation Error",
+      "level": "错误",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E40022": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E40023": {
+      "title": "File Operation Error Invalid Path",
+      "level": "错误",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "E40024": {
+      "title": "Environment Error Call Python Function Failed",
+      "level": "错误",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "W40010": {
+      "title": "Config Error Invalid Environment Variable",
+      "level": "告警",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "W40011": {
+      "title": "Directory Operation Error Create Failed",
+      "level": "告警",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "W40012": {
+      "title": "Invalid Argument",
+      "level": "告警",
+      "module": "TE Fusion",
+      "repo": "cann/ge",
+      "internal": false
+    },
+    "EE1001": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1002": {
+      "title": "Execution Error Stream Synchronize Timeout",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1003": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1004": {
+      "title": "Invalid Argument Null Pointer",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1005": {
+      "title": "Not Supported",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1006": {
+      "title": "Not Supported",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1007": {
+      "title": "Resource Error Bind Stream",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1009": {
+      "title": "Execution Error Model",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1010": {
+      "title": "Execution Error Invalid Context",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1011": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1012": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1013": {
+      "title": "Resource Error Insufficient Host Memory",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1014": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1015": {
+      "title": "Package Error Incorrect Driver Version",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1016": {
+      "title": "Not Supported",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1017": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1018": {
+      "title": "Invalid Argument API Call Sequence",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1019": {
+      "title": "Execution Error",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1020": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1021": {
+      "title": "Resource Error",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1022": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE1023": {
+      "title": "Resource Error",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE2002": {
+      "title": "Config Error Invalid Environment Variable",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE4001": {
+      "title": "Model Binding Errors",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE4002": {
+      "title": "Model Unbinding Errors",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EE4004": {
+      "title": "Profiling Enable Errors",
+      "level": "错误",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "WE0001": {
+      "title": "Not Supported",
+      "level": "告警",
+      "module": "Runtime",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0001": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0002": {
+      "title": "Invalid Argument Null Pointer",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0003": {
+      "title": "File Operation Error Invalid Path",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0004": {
+      "title": "File Operation Error",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0005": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0006": {
+      "title": "Not Supported",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0007": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0008": {
+      "title": "Invalid Argument Null Pointer",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0009": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0010": {
+      "title": "Resource Error Insufficient Host Memory",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0011": {
+      "title": "Not Supported",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0012": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0013": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EH0014": {
+      "title": "Invalid Argument Null Pointer",
+      "level": "错误",
+      "module": "AscendCL",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EI0001": {
+      "title": "Config Error Invalid Environment Variable",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0002": {
+      "title": "Communication Error Timeout",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0003": {
+      "title": "Invalid Argument Collective Communication Operator",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0004": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0005": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0006": {
+      "title": "Communication Error Get Socket",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0007": {
+      "title": "Resource Error",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0008": {
+      "title": "Package Error Incorrect HCCL Version",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0009": {
+      "title": "Communication Error Initialize Transport",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0010": {
+      "title": "Communication Error P2P",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0011": {
+      "title": "Resource Error Insufficient Device Memory",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0012": {
+      "title": "Execution Error SDMA",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0013": {
+      "title": "Execution Error ROCE CQE",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0014": {
+      "title": "Config Error Ranktable",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0015": {
+      "title": "Communication Error Ranktable Detect",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0016": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0017": {
+      "title": "Config Error Ranktable",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0018": {
+      "title": "Execution Error UB CQE",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0019": {
+      "title": "Communication Error Bind IP Port",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EI0020": {
+      "title": "Communication Error Bind IP Port",
+      "level": "错误",
+      "module": "HCCL",
+      "repo": "cann/hcomm",
+      "internal": false
+    },
+    "EK0001": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0002": {
+      "title": "Invalid Argument API Call Sequence",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0003": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0004": {
+      "title": "Not Supported API",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0005": {
+      "title": "Not Supported",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0006": {
+      "title": "Invalid Argument Null Pointer",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0007": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0201": {
+      "title": "Resource Error Insufficient Host Memory",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0202": {
+      "title": "Resource Error Insufficient Host Memory",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0203": {
+      "title": "Resource Error",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK0204": {
+      "title": "Resource Error",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EK9999": {
+      "title": "System Terminated",
+      "level": "错误",
+      "module": "Profiling",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "EL0001": {
+      "title": "Device Absent/Abnormal",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0002": {
+      "title": "Invalid Device ID",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0003": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0004": {
+      "title": "Memory Allocation Failure",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0005": {
+      "title": "Resource Busy",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0006": {
+      "title": "Insufficient Resources",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0007": {
+      "title": "No Permission",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0008": {
+      "title": "Insufficient Event Resources",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0009": {
+      "title": "Insufficient Stream Resources",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0010": {
+      "title": "Insufficient Notify Resources",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0011": {
+      "title": "Insufficient Model Resources",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0012": {
+      "title": "Full Service Queue",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0013": {
+      "title": "Insufficient CDQM Resources",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0014": {
+      "title": "Operation Unsupported",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0015": {
+      "title": "Invalid Device Access",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0016": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0017": {
+      "title": "Invalid Argument Null Pointer",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0018": {
+      "title": "Resource Error Insufficient Host Memory",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0019": {
+      "title": "Resource Error Insufficient Device Memory",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0020": {
+      "title": "Resource Busy",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0021": {
+      "title": "Not Supported",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0022": {
+      "title": "Resource Error Insufficient SQCQ",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0023": {
+      "title": "Resource Error",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EL0024": {
+      "title": "Resource Busy Memory In Use",
+      "level": "错误",
+      "module": "Driver",
+      "repo": "cann/driver",
+      "internal": false
+    },
+    "EM9001": {
+      "title": "Inner Error Group Attach Failed",
+      "level": "错误",
+      "module": "队列调度",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "EM9002": {
+      "title": "Inner Error Queue Scheduler Init Failed",
+      "level": "错误",
+      "module": "队列调度",
+      "repo": "cann/runtime",
+      "internal": true
+    },
+    "EN0001": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0002": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0003": {
+      "title": "Invalid Argument Null Pointer",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0004": {
+      "title": "Not Supported",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0005": {
+      "title": "Invalid Argument Channel ID",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0006": {
+      "title": "Invalid Argument Memory Address",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0007": {
+      "title": "Execution Error DVPP Operator Timeout（优化示例）",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0008": {
+      "title": "Not Supported File Type",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0009": {
+      "title": "Not Supported File Type",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0010": {
+      "title": "Resource Error Insufficient Host Memory",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0011": {
+      "title": "Resource Error Insufficient Host Memory",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0012": {
+      "title": "Resource Error Insufficient Device Memory",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0013": {
+      "title": "Resource Error Busy",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0014": {
+      "title": "Resource Error Insufficient Channel",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0015": {
+      "title": "Resource Error",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0016": {
+      "title": "File Operation Error Open",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EN0017": {
+      "title": "Invalid Argument API Call Sequence",
+      "level": "错误",
+      "module": "DVPP",
+      "repo": "cann/runtime",
+      "internal": false
+    },
+    "EO0001": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "AMCT",
+      "repo": null,
+      "internal": false
+    },
+    "EO0002": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "AMCT",
+      "repo": null,
+      "internal": false
+    },
+    "EO0003": {
+      "title": "Invalid Model",
+      "level": "错误",
+      "module": "AMCT",
+      "repo": null,
+      "internal": false
+    },
+    "EO0004": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "AMCT",
+      "repo": null,
+      "internal": false
+    },
+    "EO0005": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "AMCT",
+      "repo": null,
+      "internal": false
+    },
+    "EO0006": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "AMCT",
+      "repo": null,
+      "internal": false
+    },
+    "EO9999": {
+      "title": "Inner Error",
+      "level": "错误",
+      "module": "AMCT",
+      "repo": null,
+      "internal": true
+    },
+    "EP0001": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "unknown",
+      "repo": null,
+      "internal": false
+    },
+    "EP0002": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "unknown",
+      "repo": null,
+      "internal": false
+    },
+    "EP0003": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "unknown",
+      "repo": null,
+      "internal": false
+    },
+    "EP0004": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "unknown",
+      "repo": null,
+      "internal": false
+    },
+    "EP0005": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "unknown",
+      "repo": null,
+      "internal": false
+    },
+    "EP0006": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "unknown",
+      "repo": null,
+      "internal": false
+    },
+    "EP0007": {
+      "title": "Invalid Argument Null Pointer",
+      "level": "错误",
+      "module": "unknown",
+      "repo": null,
+      "internal": false
+    },
+    "EP0008": {
+      "title": "Invalid Argument API Call Sequence",
+      "level": "错误",
+      "module": "unknown",
+      "repo": null,
+      "internal": false
+    },
+    "EZ0001": {
+      "title": "Invalid Input Shape",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0002": {
+      "title": "Invalid Attr",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0003": {
+      "title": "Invalid Attr Size",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0004": {
+      "title": "Invalid Input",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0005": {
+      "title": "Invalid Input ShapeSize",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0006": {
+      "title": "Invalid Input Format",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0007": {
+      "title": "Invalid Input Dtype",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0008": {
+      "title": "Invalid Argument Tensor Shape",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0009": {
+      "title": "Invalid Argument Tensor Shape",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0010": {
+      "title": "Invalid Argument Tensor Shape",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0011": {
+      "title": "Invalid Argument Tensor Shape Dim",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0012": {
+      "title": "Invalid Argument Tensor Shape Dim",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0013": {
+      "title": "Invalid Argument Tensor Shape Dim",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0014": {
+      "title": "Invalid Argument Tensor Shape Size",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0015": {
+      "title": "Invalid Argument Tensor Shape Size",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0016": {
+      "title": "Invalid Argument Tensor Shape Size",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0017": {
+      "title": "Invalid Argument Tensor Format",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0018": {
+      "title": "Invalid Argument Tensor Format",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0019": {
+      "title": "Invalid Argument Tensor Dtype",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0020": {
+      "title": "Invalid Argument Tensor Dtype",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0021": {
+      "title": "Invalid Argument Tensor Dtype",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0022": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0023": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0024": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0025": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0026": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0027": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0028": {
+      "title": "Invalid Argument Tensor Stride",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0029": {
+      "title": "File Operation Error Invalid Path",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0030": {
+      "title": "File Operation Error Open",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0031": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0032": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0033": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0034": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0035": {
+      "title": "Invalid Argument Tensor Format",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0036": {
+      "title": "Invalid Argument Graph",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0037": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ0038": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ2001": {
+      "title": "Execution Error",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1001": {
+      "title": "AclNN Parameter Error",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1002": {
+      "title": "Config Error Invalid Environment Variable",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1003": {
+      "title": "File Operation Error Open",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1004": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1005": {
+      "title": "File Operation Error Parse",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1006": {
+      "title": "Not Supported Data Type",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1007": {
+      "title": "Invalid Argument Tensor Input Shape",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1008": {
+      "title": "Execution Error",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1009": {
+      "title": "Execution Error",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1010": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1011": {
+      "title": "Invalid Argument Null Pointer",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1012": {
+      "title": "Invalid Argument",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1013": {
+      "title": "Config Error",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    },
+    "EZ1014": {
+      "title": "Execution Error",
+      "level": "错误",
+      "module": "算子公共/aclnn",
+      "repo": "cann/ops-nn",
+      "internal": false
+    }
+  }
+}

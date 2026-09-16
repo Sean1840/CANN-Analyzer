@@ -1,0 +1,15 @@
+{
+  "id": "line-drift",
+  "skill": ["cann-log-locate"],
+  "log": "fixtures/logs/drift_sample.log",
+  "index_repo": "cann/runtime",
+  "index_source": "fixtures/mini_repo",
+  "expect": {
+    "parsed": {"level": "ERROR", "module": "ASCENDCL"},
+    "path_suffix": "context.cpp",
+    "line_tolerance": 200,
+    "signals": [],
+    "stage": "component",
+    "allowed_repos": ["cann/runtime"]
+  }
+}

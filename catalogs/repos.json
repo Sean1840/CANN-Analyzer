@@ -13,7 +13,8 @@
       "languages": ["c", "cpp"],
       "index_globs": ["src/**", "include/**", "pkg_inc/**"],
       "skip_globs": ["tests/**", "example/**", "third_party/**", "stub/**"],
-      "msprof_roles": ["component", "collect"]
+      "msprof_roles": ["component", "collect"],
+      "baseline": true
     },
     {
       "id": "ascend/msprof",
@@ -26,7 +27,8 @@
       "languages": ["python", "cpp"],
       "index_globs": ["analysis/**", "src/**", "misc/**"],
       "skip_globs": ["test/**", "tests/**", "opensource/**", "build/**", "output/**"],
-      "msprof_roles": ["collect", "parse"]
+      "msprof_roles": ["collect", "parse"],
+      "baseline": true
     },
     {
       "id": "ascend/msprof-analyze",
@@ -195,7 +197,8 @@
       "languages": ["c", "cpp"],
       "index_globs": ["**/*"],
       "skip_globs": ["tests/**", "third_party/**"],
-      "msprof_roles": ["component"]
+      "msprof_roles": ["component"],
+      "baseline": true
     },
     {
       "id": "cann/hccl",
@@ -208,7 +211,8 @@
       "languages": ["cpp"],
       "index_globs": ["**/*"],
       "skip_globs": ["tests/**", "third_party/**"],
-      "msprof_roles": ["component"]
+      "msprof_roles": ["component"],
+      "baseline": true
     },
     {
       "id": "cann/hixl",
@@ -234,7 +238,8 @@
       "languages": ["cpp"],
       "index_globs": ["**/*"],
       "skip_globs": ["tests/**"],
-      "msprof_roles": ["component"]
+      "msprof_roles": ["component"],
+      "baseline": true
     },
     {
       "id": "cann/ops-nn",
@@ -247,7 +252,8 @@
       "languages": ["cpp"],
       "index_globs": ["**/*"],
       "skip_globs": ["tests/**", "docs/**"],
-      "msprof_roles": ["component"]
+      "msprof_roles": ["component"],
+      "baseline": true
     },
     {
       "id": "cann/ops-math",
@@ -260,7 +266,8 @@
       "languages": ["cpp"],
       "index_globs": ["**/*"],
       "skip_globs": ["tests/**"],
-      "msprof_roles": ["component"]
+      "msprof_roles": ["component"],
+      "baseline": true
     },
     {
       "id": "cann/ops-cv",
@@ -273,7 +280,8 @@
       "languages": ["cpp"],
       "index_globs": ["**/*"],
       "skip_globs": ["tests/**"],
-      "msprof_roles": ["component"]
+      "msprof_roles": ["component"],
+      "baseline": true
     },
     {
       "id": "cann/ops-transformer",

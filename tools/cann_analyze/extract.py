@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from cann_analyze.catalog import log_macros
-from cann_analyze.fingerprint import error_codes, fingerprint
+from cann_analyze.fingerprint import error_codes, fingerprint, keywords
 
 C_EXTS = {".c", ".cc", ".cpp", ".cxx", ".h", ".hpp", ".cu"}
 PY_EXTS = {".py"}
@@ -164,20 +164,22 @@ def extract_c(text: str, path: str) -> list[dict[str, Any]]:
                 i = end
                 continue
             sites.append(
-                {
-                    "path": path,
-                    "basename": Path(path).name,
-                    "line": line_no,
-                    "func": _enclosing_func(text, i),
-                    "macro": name,
-                    "level": meta.get("level", "UNKNOWN"),
-                    "lang": "cpp",
-                    "fmt": fmt.strip(),
-                    "fingerprint": fingerprint(fmt),
-                    "error_codes": error_codes(fmt),
-                    "module_hint": meta.get("module_hint"),
-                    "source_line": source_line[:240],
-                }
+                _annotate_site(
+                    {
+                        "path": path,
+                        "basename": Path(path).name,
+                        "line": line_no,
+                        "func": _enclosing_func(text, i),
+                        "macro": name,
+                        "level": meta.get("level", "UNKNOWN"),
+                        "lang": "cpp",
+                        "fmt": fmt.strip(),
+                        "fingerprint": fingerprint(fmt),
+                        "error_codes": error_codes(fmt),
+                        "module_hint": meta.get("module_hint"),
+                        "source_line": source_line[:240],
+                    }
+                )
             )
         i = end
     return sites
@@ -212,22 +214,33 @@ def extract_python(text: str, path: str) -> list[dict[str, Any]]:
         if not fmt:
             continue
         sites.append(
-            {
-                "path": path,
-                "basename": Path(path).name,
-                "line": _line_number(text, match.start()),
-                "func": _enclosing_func(text, match.start()),
-                "macro": name,
-                "level": meta.get("level", "INFO"),
-                "lang": "python",
-                "fmt": fmt,
-                "fingerprint": fingerprint(fmt),
-                "error_codes": error_codes(fmt),
-                "module_hint": meta.get("module_hint"),
-                "source_line": text.splitlines()[_line_number(text, match.start()) - 1].strip()[:240],
-            }
+            _annotate_site(
+                {
+                    "path": path,
+                    "basename": Path(path).name,
+                    "line": _line_number(text, match.start()),
+                    "func": _enclosing_func(text, match.start()),
+                    "macro": name,
+                    "level": meta.get("level", "INFO"),
+                    "lang": "python",
+                    "fmt": fmt,
+                    "fingerprint": fingerprint(fmt),
+                    "error_codes": error_codes(fmt),
+                    "module_hint": meta.get("module_hint"),
+                    "source_line": text.splitlines()[_line_number(text, match.start()) - 1].strip()[:240],
+                }
+            )
         )
     return sites
+
+
+def _annotate_site(site: dict[str, Any]) -> dict[str, Any]:
+    site["keywords"] = keywords(
+        site.get("fmt"),
+        extra=list(site.get("error_codes") or [])
+        + [site.get("basename"), site.get("macro"), site.get("func"), site.get("module_hint")],
+    )
+    return site
 
 
 def should_skip(path: Path, skip_globs: Iterable[str]) -> bool:

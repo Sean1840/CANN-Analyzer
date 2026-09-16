@@ -3,7 +3,7 @@ name: cann-prof-collect
 description: >
   定位 profiling 采集落盘：aclprof 启停、PROF host/device data、ChannelReader、
   AICPU 通道、host_start/done。Use when cann-prof-pipeline 判定采集，or the user
-  asks about 采集失败、原始件缺失、host_start、slice、all_file.complete、aclprof、
+  asks about 采集失败、原始件缺失、host_start、slice、aclprof、
   ChannelReader、/cann-prof-collect. Not for csv/timeline 解析结果
   (use cann-prof-parse). Not the first skill for 分析这份数据
   (use cann-prof-pipeline).

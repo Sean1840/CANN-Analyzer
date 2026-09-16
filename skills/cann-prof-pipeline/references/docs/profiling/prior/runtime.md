@@ -16,7 +16,7 @@ aclprofStart
   → Host Report 线程：按类型写入 host/data
   → ChannelReader：DrvChannelRead → upload → device_x/data
 aclprofStop
-  → 刷缓冲、写 *.done / all_file.complete、host_start/end_info
+  → 刷缓冲、写采集侧 done（如 host_start.log.done、end_info.done）
 ```
 
 **和别的仓边界**

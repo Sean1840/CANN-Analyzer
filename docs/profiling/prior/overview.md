@@ -20,9 +20,9 @@ torch_npu 再解析 FRAMEWORK + 上述结果 → ASCEND_PROFILER_OUTPUT
 分流（原始数据决定采集，解析产物决定解析）：
 
 1. 业务 ERROR 出现在 PROF 还不存在之前 → 业务/环境。
-2. `host/data` 或 `device_*/data` 缺、无 `*.done` / `all_file.complete` → **采集**（runtime）。
+2. `host/data` 或 `device_*/data` 缺、无采集侧 `host_start`/`*.done` → **采集**（runtime）。不要用 `all_file.complete` 判断采集（那是解析标记，且现行路径未必落盘）。
 3. 原始在、缺 type 名或某类 host 切片 → **上报**（按模块：ACL/runtime、GE、hcomm）。
-4. 原始完整、缺 `mindstudio_profiler_output` 或关联/导出错 → **解析**（msprof）。
+4. 原始完整、缺 `mindstudio_profiler_output` 或关联/导出错 → **解析**（msprof）。有无 `all_file.complete` 不能单独定解析成败。
 5. PROF 已解析、缺 `ASCEND_PROFILER_OUTPUT` / `logs` → **框架解析**（pytorch）。
 6. 解析过程发现原始条数/id 对不上 → 回到采集或上报，不要停在 viewer。
 

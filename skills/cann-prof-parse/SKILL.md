@@ -17,7 +17,7 @@ description: >
 
 ## 跳转
 
-- 原始目录或 `all_file.complete` 没有 → **`cann-prof-collect`**
+- 原始 `host/data` 或 `device_*/data` 切片缺失 → **`cann-prof-collect`**（不要因没有 `all_file.complete` 就判采集；那是解析标记且未必落盘）
 - 捞出的内容说明是上报漏了（如 type 未注册）→ **回 `cann-prof-pipeline`（上报）**
 - 单行对代码 → `cann-log-locate`；尚未分流 → **`cann-prof-pipeline`**
 

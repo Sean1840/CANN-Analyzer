@@ -17,7 +17,7 @@
 
 API 的 tag 固定 `data`。Compact/Additional 的 tag 来自 `MsprofRegTypeInfo`。  
 样本（mc2 l0）：`aging.api_event.data`、`aging.compact.task_track`、`aging.additional.mc2_comm_info`、`unaging.additional.hash_dic`、`unaging.additional.type_info_dic`。  
-结束：同目录 `all_file.complete`；host 还有 `host_start.log.done`、`end_info.done`。
+采集结束：host 侧常见 `host_start.log.done`、`end_info.done`。`all_file.complete` **不是采集件**，见 [msprof.md](msprof.md)（Python 解析结束标记，现行 C 化未必写）。
 
 **ChannelReader**（`transport/prof_channel.cpp`）：`DrvChannelRead` 循环，满则 `UploaderMgr`。Job：`profimpl/collect/job_wrapper/`（`ProfAicpuJob`、`ProfTscpuJob`…）。
 

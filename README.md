@@ -10,7 +10,7 @@
 |---|---|---|
 | `cann-prof-pipeline` | 看 PROF / `*_ascend_pt` / plog（或口头 drv `ret=`），把问题分到上报、采集、解析或业务环境 | 「分析这份数据」「timeline 空」「报了 EK/EE」`/cann-prof-pipeline` |
 | `cann-prof-parse` | host 建树、device parse、任务关联、export、`mindstudio_profiler_output` | pipeline 判定解析，或 csv/timeline/db 结果不对 |
-| `cann-prof-collect` | aclprof 启停、PROF host/device 落盘、ChannelReader、`all_file.complete` | pipeline 判定采集，或原始件缺失 |
+| `cann-prof-collect` | aclprof 启停、PROF host/device 落盘、ChannelReader | pipeline 判定采集，或原始件缺失 |
 | `cann-log-locate` | 一行 slog/plog 对到源码 path:line（含 INFO/DEBUG） | 「这行日志对应哪」`/cann-log-locate` |
 | `cann-log-triage` | 盘点日志和 PROF 目录，打 evidence 包，不断言根因 | 「先看看有哪些 log」`/cann-log-triage` |
 | `cann-analyze-eval` | 跑 golden 用例和 rubric | 评测 locate 有效性，不用于现场诊断 |

@@ -7,6 +7,7 @@
 - `PROF_*/host/data`：host 上报切片
 - `PROF_*/device_*/data`：硬件/TS/AICPU 落盘
 - 解析中间：host/device 下 sqlite（Python/C 混跑时的交接）
+- `data/all_file.complete`：Python 解析跑完后可能写下的标记（`add_all_file_complete`），用来跳过再次 parse、改从 sqlite export。**不是采集落盘。** 全量 C 化等路径可以不写这个文件；缺它不能当成采集失败，也不能单独当成解析失败。
 
 **流向**
 

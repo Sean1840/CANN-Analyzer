@@ -33,7 +33,7 @@ Runtime 对 type **1071** 做了 `MsprofReportApi`，但 **没有** `MsprofRegTy
 - 字典原文：`unaging.additional.type_info_dic.slice_0` 为文本 `level_type:name`。level 5000 有 `1063:KernelLaunchWithHandle`、下一条是 `1072:CpuKernelLaunch`，**没有 1071**。
 - 中间 db：`host/sqlite/api_event.db` 表 `ApiData`，`struct_type='1071'` 且 `level='runtime'` **6 行**（起止时间、thread_id=2394278/2397243）。这就是 1071 的出处：Runtime 层 API 打点，不是 HCCL/GE。
 - 原始 `aging.api_event.data.slice_0` 中 little-endian u32=1071 出现 6 次，与 db 行数一致。
-- 采集完整：host_start.done、all_file.complete、mindstudio_profiler_output。plog 无 `[ERROR]`。
+- 采集完整：host_start.done、host/device data 切片在。mindstudio_profiler_output 是解析交付件。plog 无 `[ERROR]`。
 - 次要：plog `[WARNING] Channel is invalid, channelId:7`（DDR 通道本芯片无效），与 1071 无关。
 
 ### 来源
@@ -89,7 +89,7 @@ export 报 NetDevStats 失败，并拖垮 Timeline / Summary；其它硬件 csv 
 - `export_manager` / `py_init_parser` 把该失败当成 Timeline/Summary run failed（整段 export 失败码）。
 - 中间 db 实测：`device_0/sqlite/netdev_stats.db` 表 `NetDevStatsOriginalData` **rows=1**（timestamp 一条，计数全 0）。
 - 原始件：`device_0/data/netdev_stats.data.0.slice_0` **47 字节**，与「只采到 1 个采样点」相符。同目录 `nic.data` / `roce.data` 更大，所以网卡通道不是完全没采。
-- 采集标志：host_start.done、all_file.complete 在；mindstudio_profiler_output 仍有 nic.csv 等（来自 **nic.db**，不是 NetDevStats 这条 processor）。
+- 采集标志：host_start.done、host/device data 在；mindstudio_profiler_output 仍有 nic.csv 等（来自 **nic.db**，不是 NetDevStats 这条 processor）。
 
 ### 来源
 原始 slice + sqlite 行数 + processor 源码。版本未对齐基线。

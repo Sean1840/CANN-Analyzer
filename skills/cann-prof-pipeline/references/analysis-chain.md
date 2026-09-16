@@ -12,17 +12,48 @@
 
 只有口头现象、没有文件：先按模块+错误码给方向，然后要 plog/PROF。没有材料就不要沿 dump 链往下编。
 
-只要还没到「无法定位」，就必须按先验流向继续往下问，不要停在「解析报了 xx」「采集失败」这类句子。
+只要还没到「无法定位」，就按下面往下走，不要停在「解析报了 xx」「采集失败」「csv 不对」这类句子。
 
-流向：上报发出 → 采集落盘（host/data、device_x/data）→ 解析读原始或中间 db → 交付件。
+## 交付件字段问题（主路径）
 
-**解析报错：** 先问有没有这份数据。有则把**报错对应的那一条**从数据里找出来（现成 sqlite；没有就按先验临时解析切片、dic 文本、小脚本）。找到 type/id/时间/模块后，再判断是上报漏了、采集没写全、还是解析算错。
+用户说字段不对、和预期/正常导出有差异、缺列、值异常时，**从外往里比**，不要先猜仓。
 
-**采集报缺/坏：** 对照 host_start、采集侧 `*.done`（如 `host_start.log.done`）、对应切片是否存在、是否为空或条数不够。有切片则打开看内容，不要只看文件名。`all_file.complete` 是 Python 解析结束标记，不是采集件，现行路径也可以不写。
+```text
+交付件（csv / timeline json / msprof_*.db / ASCEND_PROFILER_OUTPUT）
+    │  字段是否符合预期、用户描述、正常导出
+    ▼
+中间 db（解析后的 sqlite：host/device sqlite，或统一 DB）
+    │  没有则临时跑解析脚本/parser，把中间 db 或可读的原始表拿到手
+    │  中间 db 对、交付件错  → 导出（assembler / viewer / export 配置）
+    │  中间 db 已错          → 不是导出，往里看
+    ▼
+原始 db / 原始切片（仅当「中间」和「原始」不是同一份，中间有计算或拼接）
+    │  两份一样           → 问题在更上游（采集/上报），不要在 calculate 里找
+    │  原始对、中间错     → 解析组合：建树、关联、gear、calculator
+    │  原始已错           → 继续上游
+    ▼
+采集 host/data  vs  device_*/data
+    │  落在 host 切片 → host 上报组件（ACL / GE / hcomm / runtime）
+    │  落在 device 切片 → device 通道（drv / AICPU / TS）
+    ▼
+对应业务代码（RegType、Report*、drv 通道、parser_item）
+```
 
-**手段：** 中间 db、原始 slice、type_info/hash 文本、必要时临时 parser。目的是拿到报错那条内容，不是换一种方式复述日志。
+`all_file.complete` 是 Python 解析结束标记，不是采集件，现行路径也可以不写。
 
-**才能停：** 现有文件无法重建该条，且用户也补不了；或下一跳不在已收集仓（profiling 无关则转办，不出完整报告）。
+对照正常导出时：同一开关、同一芯片档、同一条命令（timeline / summary / db），只比出问题的那张表/那些列。
+
+## 采集报缺文件
+
+对照 host_start、采集侧 `*.done`（如 `host_start.log.done`）、对应切片是否存在、是否为空或条数不够。有切片则打开看内容，不要只看文件名。原始目录都没有，再进 collect，不要从交付件空直接跳到采集。
+
+## 手段
+
+现成 sqlite、统一 DB、原始 slice、type_info/hash 文本、必要时临时 parser。目的是拿到**出问题的那一列/那一行**在每一层的样子，不是换一种方式复述日志。
+
+## 才能停
+
+现有文件无法重建该条，且用户也补不了；或下一跳不在已收集仓（profiling 无关则转办，不出完整报告）。
 
 找到可改点之后走 [version-and-fix.md](version-and-fix.md)。
 

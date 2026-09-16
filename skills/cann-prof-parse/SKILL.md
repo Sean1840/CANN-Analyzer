@@ -13,7 +13,7 @@ description: >
 
 只在链路判定=解析，或用户已确认是解析产物问题时进入。先验：[msprof](../cann-prof-pipeline/references/docs/profiling/prior/msprof.md)、[pytorch](../cann-prof-pipeline/references/docs/profiling/prior/pytorch.md)。表关联：[msprof-db.md](../cann-prof-pipeline/references/docs/profiling/details/msprof-db.md)；timeline 连线：[timeline-flow.md](../cann-prof-pipeline/references/docs/profiling/details/timeline-flow.md)。
 
-解析报错后必须按 [analysis-chain.md](../cann-prof-pipeline/references/analysis-chain.md) 继续：有没有对应原始/中间数据，能不能把报错那一条捞出来（db、切片、临时解析），再判断上报/采集/解析。不要停在日志字面。需要和 `cann-prof-pipeline` 一起安装（npx 后共享文档在 pipeline 的 `references/`）。
+字段/导出不对时按 [analysis-chain.md](../cann-prof-pipeline/references/analysis-chain.md) **从外往里比**：交付件 → 中间 db（没有则临时解析拿到）→ 仅当中间有计算/拼接再比原始 db → 原始仍错再按 host/device 上到组件代码。中间 db 对、交付件错才是导出；中间已错不要先改 assembler。需要和 `cann-prof-pipeline` 一起安装。
 
 ## 跳转
 

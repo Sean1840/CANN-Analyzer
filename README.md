@@ -2,7 +2,7 @@
 
 本仓覆盖 CANN / msprof / torch_npu profiler 的**全部分析能力**：命令行收集材料、对日志行号；skills 做分流和诊断（上报 / 采集 / 解析）。入口是 **cann-prof-pipeline**。
 
-`cann_analyze` 只摆材料和行号，不下「根因」结论；根因由本仓 skills 按链路追数据后写出。用户说「分析这份 PROF / ascend_pt / plog」时走 pipeline，不要一上来就 parse 或 collect。
+`cann_analyze` 只摆材料和行号，不下「根因」结论；根因由本仓 skills 按链路追数据后写出。用户说「分析这份 PROF / ascend_pt / plog」时走 pipeline，不要一上来就 parse 或 collect。交付件字段不对：先比交付件和正常导出，再中间 db，有拼接再比原始 db，原始仍错再按 host/device 上到组件。
 
 ## Skills
 

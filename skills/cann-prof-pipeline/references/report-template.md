@@ -41,4 +41,4 @@
 
 ## 分析链（必须跑完）
 
-按 [analysis-chain.md](analysis-chain.md)：解析/采集报错后，用原始件、中间 db 或临时解析把**那一条**捞出来，再沿上报→采集→解析走。停在「xx 失败」不算完成。超出 profiling 链则转办、不套本模板全文。
+按 [analysis-chain.md](analysis-chain.md)：交付件 → 中间 db →（有计算/拼接才）原始 db → host/device 组件。停在「xx 失败」「csv 不对」不算完成。超出 profiling 链则转办、不套本模板全文。

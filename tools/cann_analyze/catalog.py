@@ -17,15 +17,18 @@ def _load(name: str) -> dict[str, Any]:
 
 
 def _home_repo_paths() -> dict[str, str]:
-    env = os.environ.get("AGENT_SKILLS_CONFIG")
-    path = Path(env).expanduser() if env else Path.home() / ".agent-skills" / "config.json"
+    env = os.environ.get("CANN_ANALYZE_CONFIG")
+    path = Path(env).expanduser() if env else Path.home() / ".cann-analyze" / "config.json"
     if not path.is_file():
         return {}
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return {}
-    return {str(k): str(v) for k, v in dict((data.get("cann") or {}).get("repo_paths") or {}).items() if k and v}
+    mapping = dict(data.get("repo_paths") or {})
+    if not mapping:
+        mapping = dict((data.get("cann") or {}).get("repo_paths") or {})
+    return {str(k): str(v) for k, v in mapping.items() if k and v}
 
 
 def _apply_local_paths(table: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:

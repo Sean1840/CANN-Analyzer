@@ -16,7 +16,7 @@ description: >
 
 先验：[overview](references/docs/profiling/prior/overview.md)、仓 `prior/*.md`、[error-codes](references/docs/profiling/prior/error-codes.md)。细节对不上 dump 就改 `details/`。msprof 表关联：[msprof-db.md](references/docs/profiling/details/msprof-db.md)；timeline 连线：[timeline-flow.md](references/docs/profiling/details/timeline-flow.md)。
 
-工具：仓内 `PYTHONPATH` 指到本仓 `tools/`；npx 安装后指到本 skill 的 `scripts/`。然后 `python -m cann_analyze ...`。读实现才 clone；**源码路径第一次先问用户**，确认后写入 `~/.agent-skills/config.json` 的 `cann.repo_paths`（或 `catalogs/repos.local.json`）。禁止默认某盘符下的 Code 目录。
+工具：仓内 `PYTHONPATH` 指到本仓 `tools/`；npx 安装后指到本 skill 的 `scripts/`。然后 `python -m cann_analyze ...`。读实现才 clone；**源码路径第一次先问用户**，确认后写入 `~/.cann-analyze/config.json` 的 `repo_paths`（或 `catalogs/repos.local.json`）。禁止默认某盘符下的 Code 目录。
 
 ## 输入
 

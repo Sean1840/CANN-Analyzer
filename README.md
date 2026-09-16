@@ -1,8 +1,8 @@
 # CANN-Analyze
 
-CANN / msprof / torch_npu profiler 的日志定位与故障分流。CLI 做收集和行号索引，**不写根因**；分析走 Agent skills。
+本仓覆盖 CANN / msprof / torch_npu profiler 的**全部分析能力**：命令行收集材料、对日志行号；skills 做分流和诊断（上报 / 采集 / 解析）。入口是 **cann-prof-pipeline**。
 
-用户要「分析这份 PROF / ascend_pt / plog」时，入口永远是 **cann-prof-pipeline**，不要一上来就 parse 或 collect。
+`cann_analyze` 只摆材料和行号，不下「根因」结论；根因由本仓 skills 按链路追数据后写出。用户说「分析这份 PROF / ascend_pt / plog」时走 pipeline，不要一上来就 parse 或 collect。
 
 ## Skills
 
@@ -59,16 +59,14 @@ python -m cann_analyze locate --line "<plog 一行>"
 
 ## 本地配置
 
-源码 clone 路径写在 `~/.agent-skills/config.json` 的 `cann.repo_paths`，或本仓 `catalogs/repos.local.json`（已 gitignore）。**第一次缺了先问用户再写**，不要猜盘符。
+源码 clone 路径写在 `~/.cann-analyze/config.json` 的 `repo_paths`，或本仓 `catalogs/repos.local.json`（已 gitignore）。**第一次缺了先问用户再写**，不要猜盘符。
 
 ```json
 {
-  "schema": "agent-skills.config.v1",
-  "cann": {
-    "repo_paths": {
-      "ascend/msprof": "/path/to/msprof",
-      "cann/runtime": "/path/to/runtime"
-    }
+  "schema": "cann-analyze.config.v1",
+  "repo_paths": {
+    "ascend/msprof": "/path/to/msprof",
+    "cann/runtime": "/path/to/runtime"
   }
 }
 ```

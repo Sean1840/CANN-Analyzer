@@ -47,7 +47,7 @@ python -m cann_analyze locate --line "<plog 一行>"
 | 超出 profiling 链 | 不要出完整报告。写：和 profiling 无关，建议找 xx 组件 |
 | 只要对某一行到代码 | `cann-log-locate` |
 
-分流见先验 overview。交付件字段不对时按 [analysis-chain.md](references/analysis-chain.md)：先比交付件和正常导出，再中间 db，再（有拼接才）原始 db，再 host/device 组件。可改代码时再 [version-and-fix.md](references/version-and-fix.md)。
+分流见先验 overview。交付件字段不对时按 [analysis-chain.md](references/analysis-chain.md)：交付件 → 中间 db → 原始；取数用 Python 读原始，不编 C，少跑 Python 计算层；C/Python 计算逻辑只做对照和筛选。可改代码时再 [version-and-fix.md](references/version-and-fix.md)。
 
 ## 输出
 

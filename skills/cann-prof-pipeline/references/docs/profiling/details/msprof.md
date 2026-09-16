@@ -29,7 +29,8 @@ V6:    batch = 0，task 32 位
 - 配置：`msconfig/msprof_export_data_config.py`；拓扑：`timeline_topology_register.cpp`
 - 混跑时中间仍是 sqlite；全 C 规划改内存
 - Python 解析结束可能在 `data/all_file.complete` 落标记（`is_analyzed_data` 用来跳过再 parse）。C 化 WrapRunPipeline 看 sqlite 是否非空，**不一定写这个文件**。有无该文件不能单独判断采集或解析成败。
-- 字段定位：交付件（csv/json/统一 DB）← 中间 sqlite ←（有 calculator/gear/关联才）原始 sqlite/切片。中间对、交付件错才查 assembler/export。
+- 字段定位：交付件 ← 中间 sqlite ←（有 calculator/gear/关联才）原始 sqlite/切片。中间对、交付件错才查 assembler/export。
+- 分析取数：Python 读原始为主，不编 C。不要用 `mscalculate`/gear 输出当原始。C processor/assembler 与 Python calculator/viewer 对照过滤和拼接，用来发现 C/Python 差异。
 
 **样本 device_0/data：** `stars_soc.data`、`ts_track.data`（随开关变）。
 

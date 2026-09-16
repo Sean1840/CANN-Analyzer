@@ -43,6 +43,15 @@
 
 对照正常导出时：同一开关、同一芯片档、同一条命令（timeline / summary / db），只比出问题的那张表/那些列。
 
+## C 解析 vs Python 解析
+
+现场经常 **C / Python 混跑**（例如 C dump sqlite、Python 再 export，或反过来）。分析时：
+
+- **不要编 C、不要跑 WrapRunPipeline / llt 当取数手段。** C 要编译，不适合在分析动作里做。
+- **取数以 Python 读原始为主：** slice、dic、已有 sqlite。需要补中间表时，用 Python parser 把原始落到可读 db/表，**少跑 `mscalculate` / gear / viewer**。计算层会改行、过滤、拼接，拿它当「原始数据」会把导出/计算问题和上游搅在一起。
+- **算字段、过滤、关联时对照两套实现：** Python（gear / calculator / viewer）和 C（processor / assembler）。用来对齐「这一列怎么来的」、做筛选条件、核对阈值（如 MIN_RECORD_NUM）。两套不一致时单独记一条 **C/Python 差异**（同一输入、不同过滤或拼接），不要混成采集问题。
+- 现成交付件若来自 C 导出，仍用上面「交付件 → 中间 db → 原始」比；缺 db 时用 Python 从原始补表，再拿 C 代码当逻辑说明书。
+
 ## 采集报缺文件
 
 对照 host_start、采集侧 `*.done`（如 `host_start.log.done`）、对应切片是否存在、是否为空或条数不够。有切片则打开看内容，不要只看文件名。原始目录都没有，再进 collect，不要从交付件空直接跳到采集。

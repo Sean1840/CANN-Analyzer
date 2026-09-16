@@ -17,7 +17,7 @@ ops 一般不走 Report*           host 建树 + device parse
 torch_npu 再解析 FRAMEWORK + 上述结果 → ASCEND_PROFILER_OUTPUT
 ```
 
-交付件字段不对时不要先猜仓：交付件 → 中间 db →（有拼接才比）原始 db → host/device 组件（分析链）。
+交付件字段不对时不要先猜仓：交付件 → 中间 db →（有拼接才比）原始 db → host/device 组件。取数用 Python 读原始，不编 C；计算逻辑（Python gear / C assembler）只对照、筛选，不当原始数据。
 
 分流（缺原始件才是采集；交付件错先走上面这条）：
 

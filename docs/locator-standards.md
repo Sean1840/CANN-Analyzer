@@ -64,11 +64,11 @@ documented cross-case property and must be read together with the per-record che
 
 Index quality targets (separate axis, measured by `cann-analyze coverage`):
 
-| Metric | Target | Current |
+| Metric | Target | Current (shipped baseline) |
 |---|---|---|
-| Baseline repos with an index | all `baseline: true` repos | see `coverage.blind_spots` |
-| `func_coverage` overall | >= 0.80 | reported by `coverage.totals.func_coverage` |
-| C++ sites for entry-point repos (`ascend/msprof`, `cann/runtime`) | > 0 | reported by `coverage.per_repo[repo].cpp_sites` |
+| Baseline repos with an index | all `baseline: true` repos | 8 / 8, `coverage.blind_spots.baseline_not_indexed` empty |
+| `func_coverage` overall | >= 0.80 | 0.9811 |
+| C++ sites for entry-point repos (`ascend/msprof`, `cann/runtime`) | > 0 | 1805 and 5793 |
 
 `func_coverage` is the share of indexed sites that carry an enclosing function name. It
 matters because the function name is most of the context an agent gets from a hit.
@@ -88,8 +88,29 @@ PYTHONPATH=tools python -m cann_analyze coverage -o coverage.json
 | Measured | 2026-10-08 |
 | Policy | `cann-analyze.locate-policy.v1`, `min_score` 25 |
 | Policy hash (sha256, `notes` excluded) | `b494e0744a0acc282825a0544be2f7547ea68d970e0967e7078ae3f286f0789f` |
-| Index | `catalogs/baseline/sites.sqlite`, sha256 (first 16) `4548df11fb022fea`, 8 snapshots / 35666 sites |
+| Index | `catalogs/baseline/sites.sqlite`, sha256 (first 16) `769e57523afcc01d`, 8 snapshots / 38364 sites |
+| Index composition | cpp 37211, python 1153, `func_coverage` 0.9811 |
 | Labelled set | 14 positives, 10 negatives |
+| Locator result | hit@1 0.9286, hit@3 1.0000, false positives 0.0000 |
+
+### Rebuilding the shipped index
+
+The baseline is a build artefact: it must be regenerated whenever the macro catalog or the
+function-name extractor changes, otherwise `coverage` reports the covered components as
+blind spots.
+
+```text
+python -m cann_analyze index --baseline          # needs a local clone per baseline repo
+pwsh -File tools/rebuild_baseline.ps1            # clones into %TEMP%, rebuilds, cleans up
+```
+
+`tools/rebuild_baseline.ps1` shallow-clones the 8 baseline repos into
+`%TEMP%\cann-analyze-baseline\repos`, writes a temporary `catalogs/repos.local.json`
+(gitignored), rebuilds the baseline, prints the resulting coverage, then deletes both the
+clones and the temporary mapping. Commit the changed `sites.sqlite` (and its copy under
+`skills/cann-prof-pipeline/scripts/catalogs/`, via `scripts/sync_skills_payload.py`) together
+with the catalog or extractor change that required it.
+
 
 The same command with `--floor N` measures another operating point without editing the policy;
 `--strict` turns "a negative hit or a positive miss" into a non-zero exit for whoever wants a

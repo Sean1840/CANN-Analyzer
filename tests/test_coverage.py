@@ -82,17 +82,13 @@ def test_bundled_baseline_is_self_consistent():
     assert report["snapshots"], "a bundled baseline must record its snapshots"
 
 
-def test_baseline_regeneration_requirement_is_visible():
-    """The shipped baseline predates the macro-catalog fix and must be regenerated.
+def test_indexed_msprof_sites_include_the_cpp_layer():
+    """Regression guard for the macro-catalog gap.
 
-    catalogs/log_macros.json now indexes msprof's bare ERROR/WARN/INFO/DEBUG macros
-    (~1800 C++ call sites). The committed sites.sqlite was built before that change, so
-    ascend/msprof still shows python-only coverage. Refresh it with:
-
-        python -m cann_analyze index --baseline
-
-    This test documents the gap without failing while it is known: it asserts the
-    direction, so once the baseline is rebuilt the covered branch is exercised.
+    msprof logs through bare ERROR/WARN/INFO/DEBUG macros. While those names were
+    missing from catalogs/log_macros.json the bundled baseline held 912 python-only
+    sites for ascend/msprof and zero C++ sites. After the catalog fix and a baseline
+    rebuild (`python -m cann_analyze index --baseline`) the C++ layer must be present.
     """
     if not bundled_index_path().is_file():
         pytest.skip("bundled baseline index is not present")
@@ -100,7 +96,19 @@ def test_baseline_regeneration_requirement_is_visible():
     msprof = report["per_repo"].get("ascend/msprof")
     if msprof is None:
         pytest.skip("ascend/msprof is not part of the bundled baseline")
-    if msprof["cpp_sites"] == 0:
-        assert msprof["sites"] > 0, "msprof python sites should always be indexed"
-    else:
-        assert msprof["cpp_sites"] > 0
+    assert msprof["cpp_sites"] > 0, (
+        "ascend/msprof has no indexed C++ site; the baseline predates the bare-macro "
+        "catalog entries or was built with an extractor that skips them"
+    )
+
+
+def test_function_coverage_of_the_baseline_meets_the_documented_target():
+    """docs/locator-standards.md targets func_coverage >= 0.80 for the shipped index."""
+    if not bundled_index_path().is_file():
+        pytest.skip("bundled baseline index is not present")
+    totals = coverage_report()["totals"]
+    assert totals["sites"] > 0
+    assert totals["func_coverage"] >= 0.80, (
+        f"func_coverage={totals['func_coverage']} is below the documented 0.80 target; "
+        "the function-name extractor or the baseline is stale"
+    )

@@ -98,11 +98,13 @@ data/                   本地索引/镜像，不入库
 python -m pytest tests -q                          :: 离线，秒级
 python scripts/sync_skills_payload.py --check      :: 副本漂移检查（--write 重建）
 python -m eval.run_eval                            :: 定位/解析指标
+pwsh -File tools\rebuild_baseline.ps1              :: 重建随包索引（临时浅克隆，跑完自清）
 ```
 
 `skills/cann-prof-pipeline/scripts/` 是 `tools/` 与 `catalogs/` 的副本，**只由
 `scripts/sync_skills_payload.py` 生成**；`tests/test_payload_sync.py` 会在漂移时直接失败。
-取舍见 [docs/testing-and-gates.md](docs/testing-and-gates.md)，量化标准见 [docs/locator-standards.md](docs/locator-standards.md)。
+取舍见 [docs/testing-and-gates.md](docs/testing-and-gates.md)，量化标准与基线重建见
+[docs/locator-standards.md](docs/locator-standards.md)。
 
 评测：仓根 `PYTHONPATH=tools python eval/run_eval.py`。
 
@@ -124,7 +126,15 @@ CRLF、截断文件；Python 侧 async def、装饰器/classmethod、嵌套函�
 每个片段的每个调用点都有 `@expect-func:` 标记，测试同时比对标记和显式期望表，
 并断言"不应为空的地方不为空"。
 
-真实规模测算（本轮改动时的实测，仅作量级参考，不随仓更新）：对某 msprof 检出在 `repos.json`
-的 `index_globs` 范围内抽取 2725 个点位，其中 46 个无法归属函数（多为 lambda/模块级调用），
-即 `func_coverage ≈ 0.98`；同一输入在改动前为 919 个点位且几乎全部没有函数名。
+真实规模：随包基线（`catalogs/baseline/sites.sqlite`，8 个 baseline 仓）共 38364 个点位，
+其中 C++ 37211、Python 1153，`func_coverage = 0.9811`；入口仓 `ascend/msprof` 2724 个点位
+（C++ 1805）、`func_coverage = 0.997`。改动前 `ascend/msprof` 只有 912 个纯 Python 点位、
+C++ 为 0，且函数名几乎全空。
+
+索引是构建产物，改了宏表或抽取器要重生成：
+
+```bat
+python -m cann_analyze index --baseline        :: 需要本机有各 baseline 仓的 clone
+pwsh -File tools\rebuild_baseline.ps1          :: 自动浅克隆到 %TEMP%、重建、清理
+```
 

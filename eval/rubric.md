@@ -78,8 +78,8 @@ Reproducibility anchors:
 | Policy schema | `cann-analyze.locate-policy.v1` |
 | Policy hash (sha256 of the effective policy, `notes` excluded) | `b494e0744a0acc282825a0544be2f7547ea68d970e0967e7078ae3f286f0789f` |
 | Minimum accepted score (`min_score`) | 25 (raised from 20; see the calibration note below) |
-| Index | `catalogs/baseline/sites.sqlite`, sha256 (first 16) `4548df11fb022fea` |
-| Index content | 8 snapshots, 35666 sites |
+| Index | `catalogs/baseline/sites.sqlite`, sha256 (first 16) `769e57523afcc01d` |
+| Index content | 8 snapshots, 38364 sites (baseline regenerated after the macro-catalog fix) |
 | Labeled set | `catalogs/eval/labeled_cases.json`, 14 positives and 10 negatives |
 
 Overall:

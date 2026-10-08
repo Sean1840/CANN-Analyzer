@@ -105,3 +105,26 @@ python -m eval.run_eval                            :: 定位/解析指标
 取舍见 [docs/testing-and-gates.md](docs/testing-and-gates.md)，量化标准见 [docs/locator-standards.md](docs/locator-standards.md)。
 
 评测：仓根 `PYTHONPATH=tools python eval/run_eval.py`。
+
+## 索引点位的函数名（func）怎么看
+
+索引里每条点位都带一个 `func`（该日志调用所在的函数），它决定 agent 拿到命中后能有多少上下文。
+抽取器是轻量的括号/花括号配平扫描（纯 stdlib，不依赖编译器前端），**认不出来时留空，不猜**——
+控制流关键字（`if/for/while/switch/catch/try`）永远不会被写成函数名。
+
+看当前覆盖率：
+
+```bat
+python -m cann_analyze coverage        :: totals.func_coverage + per_repo 明细
+```
+
+单测用 `tests/fixtures_extract/` 下的 18 个片段（12 个 C++ / 6 个 Python）做**表驱动**校验：
+构造函数初始化列表、模板与尾置返回、多行参数、`noexcept/override`、lambda、析构与运算符重载、
+CRLF、截断文件；Python 侧 async def、装饰器/classmethod、嵌套函数、lambda 体、一行 def、制表符缩进。
+每个片段的每个调用点都有 `@expect-func:` 标记，测试同时比对标记和显式期望表，
+并断言"不应为空的地方不为空"。
+
+真实规模测算（本轮改动时的实测，仅作量级参考，不随仓更新）：对某 msprof 检出在 `repos.json`
+的 `index_globs` 范围内抽取 2725 个点位，其中 46 个无法归属函数（多为 lambda/模块级调用），
+即 `func_coverage ≈ 0.98`；同一输入在改动前为 919 个点位且几乎全部没有函数名。
+

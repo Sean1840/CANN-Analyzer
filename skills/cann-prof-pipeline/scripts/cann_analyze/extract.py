@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from fnmatch import fnmatch
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -686,23 +687,17 @@ def _annotate_site(site: dict[str, Any]) -> dict[str, Any]:
 
 
 def should_skip(path: Path, skip_globs: Iterable[str]) -> bool:
+    """True when a path is excluded by SKIP_DIRS or by one of the catalog skip_globs."""
     posix = path.as_posix()
-    parts = set(path.parts)
-    if parts & SKIP_DIRS:
+    if set(path.parts) & SKIP_DIRS:
         return True
     for glob in skip_globs:
         pattern = glob.replace("\\", "/")
-        if Path(posix).match(pattern) or Path(posix).as_posix().endswith(pattern.rstrip("*")):
-            # pathlib match is against the whole path; also handle **
-            continue
-    from fnmatch import fnmatch
-
-    for glob in skip_globs:
-        if fnmatch(posix, glob.replace("\\", "/")) or fnmatch(posix, "*/" + glob.replace("\\", "/")):
+        if fnmatch(posix, pattern) or fnmatch(posix, "*/" + pattern):
             return True
-        # prefix dir skip: tests/**
-        if glob.endswith("/**"):
-            prefix = glob[:-3]
+        # prefix dir skip: "tests/**" also excludes the tree below it
+        if pattern.endswith("/**"):
+            prefix = pattern[:-3]
             if f"/{prefix}/" in f"/{posix}/" or posix.startswith(prefix + "/"):
                 return True
     return False

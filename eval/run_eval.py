@@ -27,7 +27,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from cann_analyze.index_cmd import index_repo  # noqa: E402
 from cann_analyze.locate import load_policy, locate_path, locate_record, policy_hash  # noqa: E402
 from cann_analyze.parsers import parse_file, parse_line  # noqa: E402
-from cann_analyze.paths import bundled_index_path, catalogs_dir  # noqa: E402
+from cann_analyze.paths import bundled_index_path  # noqa: E402
 from cann_analyze.store import connect as real_connect, list_snapshots  # noqa: E402
 
 LABELED_PATH = ROOT / "catalogs" / "eval" / "labeled_cases.json"

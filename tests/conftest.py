@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pytest
 
 from cann_analyze.store import connect as real_connect

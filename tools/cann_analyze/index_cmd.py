@@ -21,8 +21,10 @@ def _match_any(rel: str, globs: list[str]) -> bool:
         g = glob.replace("\\", "/")
         if fnmatch(posix, g) or fnmatch(posix, g.removeprefix("**/")):
             return True
-        if g.endswith("/**") and (posix.startswith(g[:-3] + "/") or posix == g[:-3]):
-            return True
+        if g.endswith("/**"):
+            prefix = g[:-3]
+            if posix.startswith(prefix + "/") or posix == prefix:
+                return True
     return False
 
 

@@ -20,7 +20,6 @@ Usage (from repo root):
 from __future__ import annotations
 
 import argparse
-import filecmp
 import hashlib
 import shutil
 import sys

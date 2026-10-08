@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,9 @@ LOG_NAME_HINTS = (
     "dlog",
 )
 PROF_META = {"info.json", "sample.json", "profiler_info", "profiler_metadata.json", "analyse.done"}
+
+# A single log above this size is reported as skipped instead of silently dropped.
+MAX_LOG_BYTES = 50_000_000
 
 
 def _is_log(path: Path) -> bool:
@@ -41,30 +45,72 @@ def _kind(path: Path) -> str:
     return "other"
 
 
-def collect(path: Path) -> dict[str, Any]:
-    root = path.resolve()
-    files: list[Path] = []
-    if root.is_file():
-        files = [root]
-    elif root.is_dir():
-        for item in root.rglob("*"):
-            if item.is_file() and (_is_log(item) or any(h in item.name for h in PROF_META)):
-                if item.stat().st_size > 50_000_000:
+def _is_candidate(path: Path) -> bool:
+    return _is_log(path) or any(h in path.name for h in PROF_META)
+
+
+def _iter_candidate_files(root: Path):
+    """Deterministic walk that yields (path, size) for candidate files only."""
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames.sort()
+        for name in sorted(filenames):
+            item = Path(dirpath) / name
+            try:
+                if not item.is_file() or not _is_candidate(item):
                     continue
-                files.append(item)
+                size = item.stat().st_size
+            except OSError:
+                continue
+            yield item, size
+
+
+def collect(path: Path, *, max_log_bytes: int = MAX_LOG_BYTES) -> dict[str, Any]:
+    """Inventory log/meta files under `path`.
+
+    Never writes and never copies binary payloads. Files larger than `max_log_bytes`
+    are excluded but reported in `skipped`, so a downstream reader can tell the
+    difference between "no such data" and "too large to read".
+    """
+    root = path.resolve()
+    entries: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+
+    if root.is_file():
+        size = root.stat().st_size
+        if size > max_log_bytes:
+            skipped.append({"path": str(root), "rel": root.name, "bytes": size, "reason": "too_large"})
+        else:
+            entries.append(
+                {
+                    "path": str(root),
+                    "rel": root.name,
+                    "kind": _kind(root),
+                    "bytes": size,
+                }
+            )
+    elif root.is_dir():
+        for item, size in _iter_candidate_files(root):
+            if size > max_log_bytes:
+                skipped.append(
+                    {
+                        "path": str(item),
+                        "rel": item.relative_to(root).as_posix(),
+                        "bytes": size,
+                        "reason": "too_large",
+                    }
+                )
+                continue
+            entries.append(
+                {
+                    "path": str(item),
+                    "rel": item.relative_to(root).as_posix(),
+                    "kind": _kind(item),
+                    "bytes": size,
+                }
+            )
     else:
         raise FileNotFoundError(str(root))
 
-    entries = []
-    for item in sorted(files):
-        entries.append(
-            {
-                "path": str(item),
-                "rel": str(item.relative_to(root) if root.is_dir() and item != root else item.name),
-                "kind": _kind(item),
-                "bytes": item.stat().st_size,
-            }
-        )
     kinds: dict[str, int] = {}
     for e in entries:
         kinds[e["kind"]] = kinds.get(e["kind"], 0) + 1
@@ -73,6 +119,9 @@ def collect(path: Path) -> dict[str, Any]:
         "file_count": len(entries),
         "kinds": kinds,
         "files": entries,
+        "limits": {"max_log_bytes": max_log_bytes},
+        "skipped": skipped,
+        "skipped_count": len(skipped),
         "pid_bind": bind_pids(root),
     }
 
@@ -81,7 +130,7 @@ def text_log_paths(inventory: dict[str, Any]) -> list[Path]:
     out = []
     for item in inventory.get("files") or []:
         if item["kind"] in {"slog", "msprof_parse", "msprof_collect", "text_log"}:
-            if Path(item["path"]).suffix.lower() in LOG_SUFFIXES or item["kind"] != "other":
-                if Path(item["path"]).suffix.lower() in LOG_SUFFIXES or _is_log(Path(item["path"])):
-                    out.append(Path(item["path"]))
+            path = Path(item["path"])
+            if path.suffix.lower() in LOG_SUFFIXES or _is_log(path):
+                out.append(path)
     return out

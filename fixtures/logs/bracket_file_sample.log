@@ -1,0 +1,2 @@
+[ERROR][src/acl/aclrt_impl/context.cpp:244]create context failed, flags=1
+[INFO][src/acl/aclrt_impl/context.cpp:250]create context success, deviceId=0

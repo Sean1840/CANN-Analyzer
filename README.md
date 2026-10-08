@@ -77,17 +77,31 @@ python -m cann_analyze locate --line "<plog 一行>"
 
 ```text
 tools/cann_analyze/     CLI（开发改这里）
-catalogs/               仓表、错误码、开箱 sqlite
+catalogs/               仓表、错误码、日志宏、打分策略、开箱 sqlite
 skills/                 Agent skills
-  cann-prof-pipeline/   入口 + references + npx 用 scripts
+  cann-prof-pipeline/   入口 + references + npx 用 scripts（由 tools/ 与 catalogs/ 同步生成）
   cann-prof-parse/
   cann-prof-collect/
   cann-log-locate/
   cann-log-triage/
   cann-analyze-eval/
 docs/                   profiling 先验/细节（与 pipeline references/docs 同步）
-eval/                   评测用例
+  testing-and-gates.md  测试与质量门禁取舍
+  locator-standards.md  定位量化标准与实测基线
+eval/                   评测用例 + 标定数据
 data/                   本地索引/镜像，不入库
 ```
+
+## 测试与同步
+
+```bat
+python -m pytest tests -q                          :: 离线，秒级
+python scripts/sync_skills_payload.py --check      :: 副本漂移检查（--write 重建）
+python -m eval.run_eval                            :: 定位/解析指标
+```
+
+`skills/cann-prof-pipeline/scripts/` 是 `tools/` 与 `catalogs/` 的副本，**只由
+`scripts/sync_skills_payload.py` 生成**；`tests/test_payload_sync.py` 会在漂移时直接失败。
+取舍见 [docs/testing-and-gates.md](docs/testing-and-gates.md)，量化标准见 [docs/locator-standards.md](docs/locator-standards.md)。
 
 评测：仓根 `PYTHONPATH=tools python eval/run_eval.py`。

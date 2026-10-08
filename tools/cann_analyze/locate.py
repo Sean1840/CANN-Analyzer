@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from pathlib import Path
 from typing import Any
@@ -7,10 +9,171 @@ from typing import Any
 from cann_analyze.catalog import cann_error_codes, return_codes
 from cann_analyze.fingerprint import fingerprint, tokens, token_overlap
 from cann_analyze.parsers import parse_file, parse_line, parse_text
+from cann_analyze.paths import catalogs_dir
 from cann_analyze.stage_signals import candidate_repos, signals_for
 from cann_analyze.store import connect, search_sites, snapshot_map
 
-LINE_REFRESH_DELTA = 20
+POLICY_SCHEMA = "cann-analyze.locate-policy.v1"
+POLICY_FILENAME = "locate_policy.json"
+
+# Built-in copy of catalogs/locate_policy.json. That file is the contract; this dict is
+# the fallback so a missing or corrupt policy degrades to the documented behaviour
+# instead of raising. tests/test_locate_policy.py fails if the two drift apart.
+DEFAULT_POLICY: dict[str, Any] = {
+    "schema": POLICY_SCHEMA,
+    "notes": ["Built-in fallback for catalogs/locate_policy.json."],
+    "weights": {
+        "fingerprint_exact": 50,
+        "fingerprint_overlap_multiplier": 30,
+        "fingerprint_overlap_floor": 0.6,
+        "basename": 40,
+        "path_suffix": 20,
+        "path_variant": 12,
+        "line_exact": 20,
+        "line_near": 10,
+        "line_near_tolerance": 15,
+        "level": 4,
+        "error_code": 15,
+        "module": 10,
+    },
+    "min_score": 25,
+    "confidence": {
+        "bands": [
+            {"name": "high", "min_score": 80},
+            {"name": "medium", "min_score": 50},
+            {"name": "low", "min_score": 25},
+        ],
+        "fallback": "weak",
+    },
+    "line_refresh_delta": 20,
+    "limits": {"query_fetch_limit": 40, "default_result_limit": 5},
+    "query_planner": {"distinctive_min_length": 5, "distinctive_max_tokens": 6},
+}
+
+
+def _merge_policy(raw: Any, defaults: dict[str, Any]) -> dict[str, Any]:
+    """Overlay untrusted JSON on defaults, keeping known keys and matching types only."""
+    data = raw if isinstance(raw, dict) else {}
+    out: dict[str, Any] = {}
+    for key, default in defaults.items():
+        value = data.get(key)
+        if isinstance(default, dict):
+            out[key] = _merge_policy(value, default)
+        elif isinstance(default, bool):
+            out[key] = value if isinstance(value, bool) else default
+        elif isinstance(default, int):
+            ok = isinstance(value, (int, float)) and not isinstance(value, bool)
+            out[key] = int(value) if ok else default
+        elif isinstance(default, float):
+            ok = isinstance(value, (int, float)) and not isinstance(value, bool)
+            out[key] = float(value) if ok else default
+        elif isinstance(default, list) and default and all(isinstance(d, str) for d in default):
+            kept = [v for v in value if isinstance(v, str)] if isinstance(value, list) else []
+            out[key] = kept or list(default)
+        elif isinstance(default, list):
+            out[key] = list(default)
+        else:
+            out[key] = value if isinstance(value, str) and value else default
+    return out
+
+
+def _coerce_bands(value: Any, defaults: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep well-formed {name, min_score} bands, sorted high to low."""
+    bands: list[dict[str, Any]] = []
+    for item in value if isinstance(value, list) else []:
+        if not isinstance(item, dict):
+            continue
+        name = item.get("name")
+        floor = item.get("min_score")
+        if isinstance(name, str) and name and isinstance(floor, (int, float)) and not isinstance(floor, bool):
+            bands.append({"name": name, "min_score": int(floor)})
+    if not bands:
+        return [dict(band) for band in defaults]
+    bands.sort(key=lambda band: band["min_score"], reverse=True)
+    return bands
+
+
+def load_policy(path: Path | str | None = None) -> dict[str, Any]:
+    """Return the locate scoring policy, merged onto DEFAULT_POLICY. Never raises.
+
+    A missing file, unreadable file, invalid JSON, non-object document, or wrong-typed
+    field only loses that field: everything else keeps its documented default.
+    """
+    source = Path(path) if path is not None else catalogs_dir() / POLICY_FILENAME
+    raw: Any = None
+    try:
+        raw = json.loads(source.read_text(encoding="utf-8"))
+    except Exception:
+        raw = None
+    policy = _merge_policy(raw, DEFAULT_POLICY)
+    confidence = raw.get("confidence") if isinstance(raw, dict) else None
+    if not isinstance(confidence, dict):
+        confidence = {}
+    fallback = confidence.get("fallback")
+    policy["confidence"] = {
+        "bands": _coerce_bands(confidence.get("bands"), DEFAULT_POLICY["confidence"]["bands"]),
+        "fallback": fallback if isinstance(fallback, str) and fallback else DEFAULT_POLICY["confidence"]["fallback"],
+    }
+    return policy
+
+
+# Loaded once at import; functions read POLICY per call so tests can monkeypatch it.
+POLICY: dict[str, Any] = load_policy()
+
+# Compatibility mirror of the policy value. analysis_basis reads POLICY itself, so this
+# module attribute only needs to exist for external callers.
+LINE_REFRESH_DELTA = int(POLICY["line_refresh_delta"])
+
+
+def _policy() -> dict[str, Any]:
+    return POLICY if isinstance(POLICY, dict) else DEFAULT_POLICY
+
+
+def _section(name: str) -> dict[str, Any]:
+    value = _policy().get(name)
+    if isinstance(value, dict):
+        return value
+    fallback = DEFAULT_POLICY[name]
+    return fallback if isinstance(fallback, dict) else {}
+
+
+def _weights() -> dict[str, Any]:
+    return _section("weights")
+
+
+def _limits() -> dict[str, Any]:
+    return _section("limits")
+
+
+def _planner() -> dict[str, Any]:
+    return _section("query_planner")
+
+
+def _min_score() -> int:
+    try:
+        return int(_policy().get("min_score", DEFAULT_POLICY["min_score"]))
+    except (TypeError, ValueError):
+        return int(DEFAULT_POLICY["min_score"])
+
+
+def _line_refresh_delta() -> int:
+    try:
+        return int(_policy().get("line_refresh_delta", DEFAULT_POLICY["line_refresh_delta"]))
+    except (TypeError, ValueError):
+        return int(DEFAULT_POLICY["line_refresh_delta"])
+
+
+def policy_hash(policy: dict[str, Any] | None = None) -> str:
+    """sha256 of the effective policy so a measured baseline is reproducible.
+
+    The informational `notes` list is excluded: prose edits must not invalidate a
+    baseline, only changes to scoring values, bands, or limits should.
+    """
+    target = dict(POLICY if policy is None else policy)
+    target.pop("notes", None)
+    blob = json.dumps(target, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
 
 _RET_FIELD = re.compile(r"\b(?:ret|retCode|retcode)\s*=\s*(-?\d+)\b", re.I)
 
@@ -75,6 +238,8 @@ def decode_return_codes(text: str | None) -> list[dict[str, str]]:
 
 
 def _score(record: dict[str, Any], site: dict[str, Any]) -> tuple[int, list[str]]:
+    """Score one candidate site. Every point value comes from the loaded policy."""
+    weights = _weights()
     reasons: list[str] = []
     score = 0
     rec_fp = record.get("fingerprint") or fingerprint(record.get("msg") or "")
@@ -85,69 +250,72 @@ def _score(record: dict[str, Any], site: dict[str, Any]) -> tuple[int, list[str]
     site_line = site.get("line")
 
     if rec_fp and site_fp and rec_fp == site_fp:
-        score += 50
+        score += int(weights["fingerprint_exact"])
         reasons.append("fingerprint_exact")
     else:
         overlap = token_overlap(rec_fp, site_fp)
-        if overlap >= 0.6:
-            score += int(30 * overlap)
+        if overlap >= float(weights["fingerprint_overlap_floor"]):
+            score += int(int(weights["fingerprint_overlap_multiplier"]) * overlap)
             reasons.append(f"fingerprint_overlap:{overlap:.2f}")
 
     rec_bases = set(basename_variants(rec_base))
     if rec_base and site_base and site_base in rec_bases:
-        score += 40
+        score += int(weights["basename"])
         reasons.append("basename" if site_base == rec_base else "basename_variant")
         rec_file = (record.get("file") or "").replace("\\", "/")
         if rec_file and site.get("path", "").endswith(rec_file):
-            score += 20
+            score += int(weights["path_suffix"])
             reasons.append("path_suffix")
         elif any(site.get("path", "").endswith(v) for v in rec_bases):
-            score += 12
+            score += int(weights["path_variant"])
             reasons.append("path_variant")
 
     if rec_line and site_line:
         if rec_line == site_line:
-            score += 20
+            score += int(weights["line_exact"])
             reasons.append("line_exact")
-        elif abs(rec_line - site_line) <= 15:
-            score += 10
+        elif abs(rec_line - site_line) <= int(weights["line_near_tolerance"]):
+            score += int(weights["line_near"])
             reasons.append("line_near")
         elif rec_base == site_base:
             reasons.append("line_drift")
 
     rec_level = record.get("level")
     if rec_level and rec_level == site.get("level"):
-        score += 4
+        score += int(weights["level"])
         reasons.append("level")
 
     rec_codes = set(record.get("error_codes") or [])
     try:
-        import json
-
         site_codes = set(json.loads(site.get("error_codes") or "[]"))
     except Exception:
         site_codes = set()
     if rec_codes and rec_codes & site_codes:
-        score += 15
+        score += int(weights["error_code"])
         reasons.append("error_code")
 
     module = (record.get("module") or "").upper()
     hint = (site.get("module_hint") or "").upper()
     if module and hint and module == hint:
-        score += 10
+        score += int(weights["module"])
         reasons.append("module")
 
     return score, reasons
 
 
 def _confidence(score: int) -> str:
-    if score >= 80:
-        return "high"
-    if score >= 50:
-        return "medium"
-    if score >= 25:
-        return "low"
-    return "weak"
+    """Map a kept score to a confidence band using the policy band table."""
+    spec = _policy().get("confidence")
+    if not isinstance(spec, dict):
+        spec = DEFAULT_POLICY["confidence"]
+    for band in spec.get("bands") or []:
+        try:
+            floor = int(band["min_score"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if score >= floor:
+            return str(band["name"])
+    return str(spec.get("fallback") or DEFAULT_POLICY["confidence"]["fallback"])
 
 
 def analysis_basis(record: dict[str, Any], locations: list[dict[str, Any]], snaps: dict[tuple[str, str], dict[str, Any]] | None = None) -> dict[str, Any]:
@@ -171,7 +339,7 @@ def analysis_basis(record: dict[str, Any], locations: list[dict[str, Any]], snap
                 }
             )
         loc_line = loc.get("line")
-        if rec_line and loc_line and abs(int(rec_line) - int(loc_line)) > LINE_REFRESH_DELTA:
+        if rec_line and loc_line and abs(int(rec_line) - int(loc_line)) > _line_refresh_delta():
             reasons.append(f"line_delta:{rec_line}->{loc_line}")
         if loc.get("line_drift") and "fingerprint_exact" not in (loc.get("reasons") or []):
             reasons.append("weak_match_with_drift")
@@ -211,29 +379,47 @@ def format_disclaimer(snapshots: list[dict[str, Any]], reasons: list[str]) -> st
     return text
 
 
-def locate_record(record: dict[str, Any], conn=None, limit: int = 5) -> dict[str, Any]:
+def locate_record(
+    record: dict[str, Any],
+    conn=None,
+    limit: int | None = None,
+    min_score: int | None = None,
+) -> dict[str, Any]:
+    """Locate index sites for one parsed log record.
+
+    limit and min_score default to the loaded policy (limits.default_result_limit and
+    min_score). min_score is the explicit negative-case control: raise it to demand
+    stronger evidence, or set it above the highest reachable score to assert that this
+    log must not resolve to any site at all.
+    """
     own = conn is None
     conn = conn or connect()
     try:
+        limits = _limits()
+        planner = _planner()
+        fetch_limit = int(limits.get("query_fetch_limit", DEFAULT_POLICY["limits"]["query_fetch_limit"]))
+        result_limit = int(limits.get("default_result_limit", DEFAULT_POLICY["limits"]["default_result_limit"])) if limit is None else int(limit)
+        threshold = _min_score() if min_score is None else int(min_score)
+        min_token_length = int(planner.get("distinctive_min_length", 5))
+        max_tokens = int(planner.get("distinctive_max_tokens", 6))
         snaps = snapshot_map(conn)
         repos = candidate_repos(record)
         basename = _basename(record.get("file"))
         fp = record.get("fingerprint") or fingerprint(record.get("msg_body") or record.get("msg") or "")
-        distinctive = [t for t in tokens(fp) if len(t) >= 5][:6]
+        distinctive = [t for t in tokens(fp) if len(t) >= min_token_length][:max_tokens]
         candidates: list[dict[str, Any]] = []
         seen: set[tuple] = set()
         queries: list[dict[str, Any]] = []
         for name in basename_variants(basename):
-            queries.append(dict(basename=name, repo_ids=repos or None, fingerprint_value=None, limit=40))
-            queries.append(dict(basename=name, repo_ids=None, fingerprint_value=fp or None, limit=40))
-        queries.extend(
-            [
-                dict(basename=None, repo_ids=repos or None, fingerprint_value=fp or None, limit=40),
-                dict(basename=None, repo_ids=None, fingerprint_value=fp or None, limit=40),
-                dict(basename=None, repo_ids=repos or None, fingerprint_value=None, tokens=distinctive, limit=40),
-                dict(basename=None, repo_ids=None, fingerprint_value=None, tokens=distinctive, limit=40),
-            ]
-        )
+            queries.append(dict(basename=name, repo_ids=repos or None, fingerprint_value=None, limit=fetch_limit))
+            queries.append(dict(basename=name, repo_ids=None, fingerprint_value=fp or None, limit=fetch_limit))
+        queries.append(dict(basename=None, repo_ids=repos or None, fingerprint_value=fp or None, limit=fetch_limit))
+        queries.append(dict(basename=None, repo_ids=None, fingerprint_value=fp or None, limit=fetch_limit))
+        if distinctive:
+            # No distinctive token means no token query at all: an empty token list
+            # would only widen the scan to every indexed site.
+            queries.append(dict(basename=None, repo_ids=repos or None, fingerprint_value=None, tokens=distinctive, limit=fetch_limit))
+            queries.append(dict(basename=None, repo_ids=None, fingerprint_value=None, tokens=distinctive, limit=fetch_limit))
         for q in queries:
             if not q.get("basename") and not q.get("fingerprint_value") and not q.get("tokens"):
                 continue
@@ -243,7 +429,7 @@ def locate_record(record: dict[str, Any], conn=None, limit: int = 5) -> dict[str
                     continue
                 seen.add(key)
                 score, reasons = _score(record, site)
-                if score < 20:
+                if score < threshold:
                     continue
                 meta = snaps.get((site["repo_id"], site["git_commit"])) or {}
                 candidates.append(
@@ -277,7 +463,7 @@ def locate_record(record: dict[str, Any], conn=None, limit: int = 5) -> dict[str
                 "from_log": True,
                 "repos": repos,
             }
-        top = candidates[:limit]
+        top = candidates[:result_limit]
         parsed_keys = ("level", "module", "file", "line", "tid", "msg", "parser", "error_codes")
         return {
             "parsed": {k: record.get(k) for k in parsed_keys},
@@ -293,7 +479,7 @@ def locate_record(record: dict[str, Any], conn=None, limit: int = 5) -> dict[str
             conn.close()
 
 
-def locate_text(text: str, source_path: str | None = None, limit: int = 5) -> list[dict[str, Any]]:
+def locate_text(text: str, source_path: str | None = None, limit: int | None = None) -> list[dict[str, Any]]:
     conn = connect()
     try:
         return [locate_record(rec, conn=conn, limit=limit) for rec in parse_text(text, source_path)]
@@ -301,7 +487,7 @@ def locate_text(text: str, source_path: str | None = None, limit: int = 5) -> li
         conn.close()
 
 
-def locate_path(path: Path, limit: int = 5) -> list[dict[str, Any]]:
+def locate_path(path: Path, limit: int | None = None) -> list[dict[str, Any]]:
     conn = connect()
     try:
         return [locate_record(rec, conn=conn, limit=limit) for rec in parse_file(path)]

@@ -1,0 +1,171 @@
+{
+  "schema": "cann-analyze.labeled-cases.v1",
+  "notes": [
+    "Calibration set for `PYTHONPATH=tools python eval/run_eval.py --labeled`.",
+    "Expectations target the shipped catalogs/baseline/sites.sqlite index (8 snapshots, no network, no clone). Re-run the command after rebuilding the baseline to refresh the numbers.",
+    "A positive case is a hit at rank k when, for any parsed record of the case, a location in the top-k has expect.repo_id (when given), a path ending with expect.path_suffix, and a line within expect.line_tolerance of expect.line (when expect.line is given).",
+    "A negative case must return index_miss=true with zero locations. Any returned location is counted as a false positive, which means the minimum accepted score admitted non-distinctive evidence.",
+    "kind=line scores a single log line, so the case does not depend on log-file layout. kind=log scores every record of a committed fixture log.",
+    "Notes on individual cases record why the expectation is fair; read them before retuning anything."
+  ],
+  "cases": [
+    {
+      "id": "p-context-failed",
+      "kind": "line",
+      "line": "[ERROR] ASCENDCL(123,python):2026-09-02-18:11:41.121.000 [src/acl/aclrt_impl/context.cpp:244]create context failed, flags=1",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "context.cpp"},
+      "notes": "slog line 1 of fixtures/logs/slog_sample.log. The message body is unique to ACL_LOG_ERROR in context.cpp."
+    },
+    {
+      "id": "p-context-drift",
+      "kind": "line",
+      "line": "[ERROR] ASCENDCL(9,python):2026-01-01-00:00:00.000.000 [src/acl/aclrt_impl/context.cpp:10]create context failed, flags=9",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "context.cpp"},
+      "notes": "Same message with a line number that does not exist in the index; the basename plus path suffix must still win."
+    },
+    {
+      "id": "p-file-ageing",
+      "kind": "line",
+      "line": "[ERROR] PROFILING(54308,):2026-09-02-21:18:32.052.517 [file_aging.cpp:61] (tid:54308) Available volume:0 (0MB) less than 20MB. Data will not be collected.",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "file_ageing.cpp"},
+      "notes": "The log says file_aging.cpp, the indexed file is file_ageing.cpp, so only the basename variant and the near-identical format string can resolve it."
+    },
+    {
+      "id": "p-file-ageing-alt-site",
+      "kind": "line",
+      "line": "[ERROR] PROFILING(54308,):2026-09-02-21:18:32.052.517 [file_aging.cpp:61] (tid:54308) Available volume:0 (0MB) less than 20MB. Data will not be collected.",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "file_ageing.cpp", "line": 53, "line_tolerance": 5},
+      "notes": "Deliberate hit@3-only positive: the same macro also sits at line 53 of the same file. Used to exercise the hit@3 path and the monotonicity check; it must not be expected at rank 1."
+    },
+    {
+      "id": "p-report-prof-api",
+      "kind": "line",
+      "line": "[ERROR] RUNTIME(171,python):2026-09-02-08:18:22.035.816 [profiling_agent.cc:620]171 ReportProfApi:Failed to report profiling API data, devId=5,ret=6",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "profiling_agent.cc"},
+      "notes": "RT_LOG_CALL_MSG site; also carries ret=6 for the return-code decoder."
+    },
+    {
+      "id": "p-msprof-data-prep",
+      "kind": "line",
+      "line": "2026-09-02 18:11:41 [WARNING] [data_preparation_parser.py:104] - No data preparation data, data list is empty!",
+      "expect": {"repo_id": "ascend/msprof", "path_suffix": "data_preparation_parser.py"},
+      "notes": "The same format string exists in ms_multi_process.py, so the embedded basename is the only discriminator."
+    },
+    {
+      "id": "p-msprof-file-manager",
+      "kind": "line",
+      "line": "2026-09-02 18:11:48 [WARNING] [file_manager.py:99] - Data has been analyzed, path is /tmp/PROF_000001/host, there are ['runtime.db'] in sqlite.",
+      "expect": {"repo_id": "ascend/msprof", "path_suffix": "file_manager.py"},
+      "notes": "msprof_py layout with an absolute path and a list literal in the body."
+    },
+    {
+      "id": "p-slog-info-context",
+      "kind": "line",
+      "line": "[INFO] ASCENDCL(123,python):2026-09-02-18:11:41.122.000 [src/acl/aclrt_impl/context.cpp:250]create context success, deviceId=0",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "context.cpp"},
+      "notes": "Non-ERROR level on the same file; checks that level does not gate a hit."
+    },
+    {
+      "id": "f-slog-sample",
+      "kind": "log",
+      "log": "fixtures/logs/slog_sample.log",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "context.cpp"},
+      "notes": "4-line slog mix; one record must resolve to context.cpp. Also contains a memory.cc record that the baseline does not index."
+    },
+    {
+      "id": "f-drift-sample",
+      "kind": "log",
+      "log": "fixtures/logs/drift_sample.log",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "context.cpp"},
+      "notes": "Single drifted line as a file."
+    },
+    {
+      "id": "f-file-ageing-sample",
+      "kind": "log",
+      "log": "fixtures/logs/file_ageing_sample.log",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "file_ageing.cpp"},
+      "notes": "Basename-variant file case."
+    },
+    {
+      "id": "f-report-prof-api-sample",
+      "kind": "log",
+      "log": "fixtures/logs/report_prof_api_sample.log",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "profiling_agent.cc"},
+      "notes": "Single RUNTIME line as a file."
+    },
+    {
+      "id": "f-msprof-parse-sample",
+      "kind": "log",
+      "log": "fixtures/logs/msprof_parse_sample.log",
+      "expect": {"repo_id": "ascend/msprof", "path_suffix": "data_preparation_parser.py"},
+      "notes": "Four-line msprof parse log; record 1 must resolve even though record 3 (AscendProfiler_ProfilingParser) is not in the shipped baseline."
+    },
+    {
+      "id": "f-bracket-file-sample",
+      "kind": "log",
+      "log": "fixtures/logs/bracket_file_sample.log",
+      "expect": {"repo_id": "cann/runtime", "path_suffix": "context.cpp"},
+      "notes": "printf test-mode layout [LEVEL][file:line]msg added with this change."
+    },
+    {
+      "id": "n-unrelated-prose",
+      "kind": "negative",
+      "line": "Quarterly newsletter: the harbourside pavilion luncheon has been postponed until further notice.",
+      "notes": "English prose that cannot come from CANN source; must not resolve."
+    },
+    {
+      "id": "n-lorem",
+      "kind": "negative",
+      "line": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+      "notes": "Placeholder text; must not resolve."
+    },
+    {
+      "id": "n-fabricated-cpp-slog",
+      "kind": "negative",
+      "line": "[ERROR] MOCK(4242,python):2026-01-01-00:00:00.000.000 [src/zzz/quantum_flux_widget.cc:77]Quantum flux inversion aborted; widget telemetry unavailable.",
+      "notes": "Fabricated message with a plausible slog layout and a file that is not indexed. Must not resolve."
+    },
+    {
+      "id": "n-traceback",
+      "kind": "negative",
+      "line": "Traceback (most recent call last): RuntimeError: dataset worker terminated unexpectedly",
+      "notes": "Python traceback text with no source site behind it."
+    },
+    {
+      "id": "n-hex-dump",
+      "kind": "negative",
+      "line": "0x0000: 12 34 56 78 9a bc de f0",
+      "notes": "Hex and digits only, so the fingerprint has no token to search with; also guards the empty-token-query path."
+    },
+    {
+      "id": "n-version-banner",
+      "kind": "negative",
+      "line": "CANN 8.0.RC1 toolchain installed successfully, enjoy your new accelerator",
+      "notes": "Real product text that is not emitted by any indexed source line."
+    },
+    {
+      "id": "n-cmake-log",
+      "kind": "negative",
+      "line": "cmake --build out --target install finished with zero warnings",
+      "notes": "Build tool output; must not resolve to CANN source."
+    },
+    {
+      "id": "n-json-heartbeat",
+      "kind": "negative",
+      "line": "{\"event\":\"heartbeat\",\"node\":\"worker-7\",\"status\":\"alive\"}",
+      "notes": "Application JSON log line; must not resolve."
+    },
+    {
+      "id": "n-generic-malloc",
+      "kind": "negative",
+      "line": "malloc failed, size=4096",
+      "notes": "Bare allocator failure with no file, module, or line. No indexed site emits this message shape, so any hit is a false positive. Measured at the current minimum accepted score this case resolves to a JSON parser site on fingerprint_overlap alone; see the quantified baseline in eval/rubric.md."
+    },
+    {
+      "id": "f-unrelated-sample",
+      "kind": "negative",
+      "log": "fixtures/logs/unrelated_sample.log",
+      "notes": "Negative log case: every record of the file must return index_miss=true. Any returned location is a false positive."
+    }
+  ]
+}

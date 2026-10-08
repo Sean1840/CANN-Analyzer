@@ -1,0 +1,48 @@
+{
+  "schema": "cann-analyze.locate-policy.v1",
+  "notes": [
+    "Scoring contract for tools/cann_analyze/locate.py. The loader in locate.py treats this file as the contract and ships an identical built-in fallback, so a missing or corrupt file degrades to the values below instead of raising.",
+    "weights are additive integer points. A candidate site accumulates points for every signal it shares with the log record.",
+    "fingerprint_exact is awarded when the record fingerprint equals the site fingerprint; otherwise fingerprint_overlap multiplies the multiplier by the Jaccard token overlap, but only when the overlap reaches fingerprint_overlap_floor.",
+    "basename is awarded when the site basename equals the record basename or one of its ageing/aging variants. path_suffix / path_variant are extra points when the indexed relative path also matches.",
+    "line_exact is awarded for the same line; line_near for a distance up to line_near_tolerance. line_drift is recorded as a reason only, it adds no points.",
+    "min_score is the lowest score that keeps a candidate. Candidates below it are dropped, which is what makes index_miss true. locate_record(min_score=...) can override it per call as the explicit negative-case control.",
+    "confidence maps a kept score to a band: the first band whose min_score is reached wins, else fallback. Bands are sorted by min_score descending when loaded.",
+    "line_refresh_delta is the line distance beyond which analysis_basis flags the index snapshot as stale and asks for a refresh.",
+    "limits.query_fetch_limit caps rows fetched per search_sites query. limits.default_result_limit is the number of locations returned when the caller passes no limit.",
+    "query_planner controls the token scan: tokens shorter than distinctive_min_length are ignored and at most distinctive_max_tokens are used. An empty token list skips the token queries entirely.",
+    "min_score was raised from 20 to 25 after calibration (2026-10, catalogs/eval/labeled_cases.json): at 20 the single false positive n-generic-malloc ('malloc failed, size=4096') was admitted by fingerprint_overlap alone at exactly the old floor, while every positive match scores >= 70. At 25 the labelled set measures hit@1 0.9286, hit@3 1.0000 and zero false positives. Because min_score is now 25, the weak band is unreachable for returned locations; it stays declared so that a caller overriding min_score lower still gets a stable label."
+  ],
+  "weights": {
+    "fingerprint_exact": 50,
+    "fingerprint_overlap_multiplier": 30,
+    "fingerprint_overlap_floor": 0.6,
+    "basename": 40,
+    "path_suffix": 20,
+    "path_variant": 12,
+    "line_exact": 20,
+    "line_near": 10,
+    "line_near_tolerance": 15,
+    "level": 4,
+    "error_code": 15,
+    "module": 10
+  },
+  "min_score": 25,
+  "confidence": {
+    "bands": [
+      {"name": "high", "min_score": 80},
+      {"name": "medium", "min_score": 50},
+      {"name": "low", "min_score": 25}
+    ],
+    "fallback": "weak"
+  },
+  "line_refresh_delta": 20,
+  "limits": {
+    "query_fetch_limit": 40,
+    "default_result_limit": 5
+  },
+  "query_planner": {
+    "distinctive_min_length": 5,
+    "distinctive_max_tokens": 6
+  }
+}

@@ -57,7 +57,16 @@
     {"name": "MSPROF_ENV_ERROR", "level": "ERROR", "module_hint": "PROFILING"},
     {"name": "D_PF_LOGE", "level": "ERROR"},
     {"name": "D_PF_LOGW", "level": "WARNING"},
-    {"name": "D_PF_LOGI", "level": "INFO"}
+    {"name": "D_PF_LOGI", "level": "INFO"},
+
+    {"name": "PRINT_ERROR", "level": "ERROR", "module_hint": "PROFILING"},
+    {"name": "PRINT_WARN", "level": "WARNING", "module_hint": "PROFILING"},
+    {"name": "PRINT_INFO", "level": "INFO", "module_hint": "PROFILING"},
+
+    {"name": "ERROR", "level": "ERROR", "module_hint": "PROFILING"},
+    {"name": "WARN", "level": "WARNING", "module_hint": "PROFILING"},
+    {"name": "INFO", "level": "INFO", "module_hint": "PROFILING"},
+    {"name": "DEBUG", "level": "DEBUG", "module_hint": "PROFILING"}
   ],
   "python_functions": [
     {"name": "logging.debug", "level": "DEBUG"},

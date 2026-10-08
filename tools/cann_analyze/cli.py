@@ -10,6 +10,7 @@ from typing import Any
 from cann_analyze import __version__
 from cann_analyze.catalog import refresh_community, repos
 from cann_analyze.collect import collect
+from cann_analyze.coverage import coverage_report
 from cann_analyze.evidence import build_evidence
 from cann_analyze.index_cmd import bootstrap, build_baseline, index_all, index_repo, status
 from cann_analyze.locate import locate_one, locate_path
@@ -28,6 +29,11 @@ def _dump(data: Any, output: Path | None) -> None:
 
 def cmd_status(_: argparse.Namespace) -> int:
     _dump(status(), None)
+    return 0
+
+
+def cmd_coverage(args: argparse.Namespace) -> int:
+    _dump(coverage_report(), args.output)
     return 0
 
 
@@ -141,6 +147,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("status", help="show indexed snapshots and local clones")
     p.set_defaults(func=cmd_status)
+
+    p = sub.add_parser("coverage", help="what the index covers, and which catalog repos it misses")
+    p.add_argument("-o", "--output", type=Path)
+    p.set_defaults(func=cmd_coverage)
 
     p = sub.add_parser("catalog", help="list known repos")
     p.add_argument("--layer", help="filter by layer: runtime, toolchain, ops, ...")
